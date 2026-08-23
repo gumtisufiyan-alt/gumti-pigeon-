@@ -1,128 +1,109 @@
 <!DOCTYPE html>
-<html lang="ur" dir="rtl">
+<html lang="ur">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>گمٹی پیجن فلائنگ ٹورنامنٹ</title>
-  <style>
-    * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; padding: 0; }
-    body { background-color: #f8f9fa; font-size: 13px; direction: rtl; }
-    
-    /* Header Banners - ApnaShauq Style */
-    .header-banner { background: linear-gradient(135deg, #0052d4, #0088cc); color: white; padding: 12px 15px; font-weight: bold; font-size: 18px; text-align: center; }
-    .sub-banner { background-color: #0288d1; color: white; padding: 8px 15px; font-weight: 500; text-align: center; font-size: 13px; }
-    
-    .winner-box { padding: 8px 15px; font-weight: bold; font-size: 13px; border-bottom: 1px solid #e0e0e0; }
-    .winner-box.first { background-color: #4fc3f7; color: white; }
-    .winner-box.last { background-color: #fff8e1; color: #5d4037; border-color: #ffe082; }
-
-    /* Leaderboard Table */
-    .table-container { overflow-x: auto; padding: 10px; }
-    table { width: 100%; border-collapse: collapse; background: white; text-align: center; min-width: 800px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-    th, td { border: 1px solid #dee2e6; padding: 8px 4px; }
-    th { background-color: #e9ecef; font-size: 12px; font-weight: bold; color: #333; }
-    tr:nth-child(even) { background-color: #f8f9fa; }
-    
-    /* Entry / Admin Panel */
-    .admin-form { background: white; padding: 15px; margin: 15px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
-    .admin-form h3 { font-size: 15px; margin-bottom: 10px; color: #0052d4; text-align: center; }
-    .admin-form input { padding: 8px 10px; margin: 5px 0; width: 100%; border: 1px solid #ccc; border-radius: 4px; font-size: 13px; text-align: right; }
-    .btn { background: #0052d4; color: white; border: none; padding: 10px; width: 100%; cursor: pointer; border-radius: 4px; font-weight: bold; font-size: 14px; margin-top: 5px; }
-    .btn:hover { background-color: #003b99; }
-  </style>
+    <meta charset="UTF-8">
+    <title>گمٹی پیجن فلائنگ ٹورنامنٹ</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; direction: rtl; background-color: #f8f9fa; }
+        .container { width: 98%; margin: 10px auto; }
+        table { width: 100%; margin-top: 20px; border-collapse: collapse; background: white; font-size: 13px; }
+        th, td { border: 1px solid #ddd; padding: 6px 3px; text-align: center; }
+        th { background-color: #004085; color: white; }
+        .input-box { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); display: inline-block; margin-top: 10px; }
+        input { padding: 8px; margin: 5px; width: 280px; }
+        button { padding: 8px 15px; background-color: #004085; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
+    </style>
 </head>
 <body>
 
-  <!-- Main Banner -->
-  <div class="header-banner">
-    🕊️ گمٹی پیجن فلائنگ ٹورنامنٹ 🏆
-  </div>
-  
-  <!-- Sub Banner Details -->
-  <div class="sub-banner">
-    مقام: گمٹی شریف | تاریخ: 11 ستمبر 2026 | Start Time: 06:30 AM | کل کبوتر: 11
-  </div>
+<div class="container">
+    <h2>گمٹی پیجن فلائنگ ٹورنامنٹ 🏆</h2>
 
-  <!-- Highlights -->
-  <div class="winner-box first" id="firstWinnerDisplay">
-    First Winner Bird: ابھی ریکارڈ نہیں — Time: --:--
-  </div>
-  
-  <div class="winner-box last" id="lastWinnerDisplay">
-    Last Winner Bird: ابھی ریکارڈ نہیں — Time: --:--
-  </div>
+    <div class="input-box">
+        <h3>نئی اینٹری / وقت اپڈیٹ کریں 📝</h3>
+        <input type="text" id="ownerName" placeholder="مالک کا نام (مثلاً Ali)"><br>
+        <input type="text" id="pigeonTimes" placeholder="اوقات (مثلاً 12:30, 12:50, 13:10...)"><br>
+        <button onclick="addOrUpdateData()">جدول میں شامل کریں 💾</button>
+    </div>
 
-  <!-- Main Table View -->
-  <div class="table-container">
     <table>
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Pic</th>
-          <th>Name</th>
-          <th>Pigeon 1</th>
-          <th>Pigeon 2</th>
-          <th>Pigeon 3</th>
-          <th>Pigeon 4</th>
-          <th>Pigeon 5</th>
-          <th>Pigeon 6</th>
-          <th>Pigeon 7</th>
-          <th>Pigeon 8</th>
-        </tr>
-      </thead>
-      <tbody id="tableBody">
-        <tr>
-          <td>1</td>
-          <td>🕊️</td>
-          <td>گمٹی شریف (نام درج کریں)</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-        </tr>
-      </tbody>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Pigeon 1</th>
+                <th>Pigeon 2</th>
+                <th>Pigeon 3</th>
+                <th>Pigeon 4</th>
+                <th>Pigeon 5</th>
+                <th>Pigeon 6</th>
+                <th>Pigeon 7</th>
+                <th>Pigeon 8</th>
+                <th>Pigeon 9</th>
+                <th>Pigeon 10</th>
+                <th>Pigeon 11</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody">
+            <!-- یہاں ہر بندے کا ڈیٹا سامنے شو ہوگا -->
+        </tbody>
     </table>
-  </div>
+</div>
 
-  <!-- Admin Input Form -->
-  <div class="admin-form">
-    <h3>نئی اینٹری / وقت اپڈیٹ کریں 📝</h3>
-    <input type="text" id="pName" placeholder="مالک کا نام">
-    <input type="text" id="pTimes" placeholder="اوقات (کاما کے ساتھ، مثلاً: 11:30, 12:00, 12:30...)">
-    <button class="btn" onclick="addRow()">جدول میں شامل کریں 💾</button>
-  </div>
+<script>
+    function addOrUpdateData() {
+        let nameInput = document.getElementById('ownerName').value.trim();
+        let timeInput = document.getElementById('pigeonTimes').value.trim();
 
-  <script>
-    function addRow() {
-      const name = document.getElementById('pName').value;
-      const timesInput = document.getElementById('pTimes').value;
-      
-      if(!name) {
-        alert('براہ کرم مالک کا نام درج کریں!');
-        return;
-      }
-      
-      const times = timesInput ? timesInput.split(',') : [];
-      const tbody = document.getElementById('tableBody');
-      const rowCount = tbody.rows.length + 1;
-      
-      let rowHtml = `<tr><td>${rowCount}</td><td>🕊️</td><td>${name}</td>`;
-      
-      for(let i = 0; i < 8; i++) {
-        rowHtml += `<td>${times[i] ? times[i].trim() : '-'}</td>`;
-      }
-      rowHtml += '</tr>';
-      
-      tbody.innerHTML += rowHtml;
-      
-      document.getElementById('pName').value = '';
-      document.getElementById('pTimes').value = '';
+        if (!nameInput) {
+            alert("براہ کرم مالک کا نام درج کریں!");
+            return;
+        }
+
+        // کاما، ڈاٹ یا سپیس سے ٹائم کو الگ کریں
+        let timesArray = timeInput.split(/[,.\s]+/).filter(t => t !== "");
+
+        let tableBody = document.getElementById('tableBody');
+        let rows = tableBody.getElementsByTagName('tr');
+        let existingRow = null;
+
+        // چیک کریں کہ کیا اس نام کی رو پہلے سے موجود ہے؟
+        for (let i = 0; i < rows.length; i++) {
+            let nameCell = rows[i].getElementsByTagName('td')[1];
+            if (nameCell && nameCell.textContent.toLowerCase() === nameInput.toLowerCase()) {
+                existingRow = rows[i];
+                break;
+            }
+        }
+
+        if (existingRow) {
+            // اگر نام پہلے سے ہے، تو اسی کے سامنے 11 خانوں میں ٹائم اپڈیٹ کریں
+            let cells = existingRow.getElementsByTagName('td');
+            for (let i = 0; i < 11; i++) {
+                if (timesArray[i]) {
+                    cells[i + 2].textContent = timesArray[i];
+                }
+            }
+        } else {
+            // اگر نیا نام ہے (مثلاً Ahmed)، تو نئی رو بنائیں اور تمام 11 کبوتروں کے خانوں میں ٹائم ڈالیں
+            let newRow = tableBody.insertRow();
+            let rowCount = rows.length;
+
+            newRow.insertCell(0).textContent = rowCount; // #
+            newRow.insertCell(1).textContent = nameInput; // Name
+
+            // 11 کبوتروں (Pigeon 1 to 11) کے لیے خانے بنائیں
+            for (let i = 0; i < 11; i++) {
+                let cell = newRow.insertCell(i + 2);
+                cell.textContent = timesArray[i] ? timesArray[i] : "-";
+            }
+        }
+
+        // ان پٹ صاف کریں
+        document.getElementById('ownerName').value = '';
+        document.getElementById('pigeonTimes').value = '';
     }
-  </script>
+</script>
 
 </body>
 </html>
