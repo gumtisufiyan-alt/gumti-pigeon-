@@ -169,13 +169,11 @@
                 };
             }
 
-            // Purane times me naye times shamil karna
-            players[key].times.push(...timesArray);
-
-            // Total 11 pigeons tak limit rakhna
-            if (players[key].times.length > 11) {
-                players[key].times = players[key].times.slice(0, 11);
-            }
+        timesArray.forEach((time, index) => {
+    if (time !== "" && time !== "-") {
+        players[key].times[index] = time;
+    }
+});
 
             // Inputs clear karna
             document.getElementById("playerName").value = "";
