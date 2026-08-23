@@ -5,137 +5,66 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>گمٹی پیجن فلائنگ ٹورنامنٹ</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; background-color: #f4f7f6; direction: rtl; }
-    h2 { text-align: center; color: #0b2f5c; }
-    .card { background: white; padding: 15px; border-radius: 8px; max-width: 500px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin: 0 auto 20px auto; }
-    .input-group { margin-bottom: 10px; }
-    .input-group label { display: block; margin-bottom: 5px; font-weight: bold; }
-    .input-group input { width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
-    .inputs-grid { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
-    .inputs-grid input { width: 30%; padding: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; text-align: center; }
-    button { background: #0b2f5c; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; width: 100%; font-size: 16px; font-weight: bold; }
-    button:hover { background-color: #071f3d; }
-    .table-container { overflow-x: auto; max-width: 100%; }
-    table { width: 100%; border-collapse: collapse; background: white; min-width: 800px; }
-    th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
-    th { background-color: #0b2f5c; color: white; font-size: 14px; }
+    body { font-family: sans-serif; background-color: #f4f7f6; padding: 20px; text-align: center; }
+    .card { background: white; padding: 20px; border-radius: 12px; max-width: 650px; margin: auto; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 20px; }
+    h2 { color: #1a365d; }
+    .input-group { margin-bottom: 15px; text-align: right; }
+    label { font-weight: bold; display: block; margin-bottom: 5px; }
+    input[type="text"], input[type="password"] { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
+    .pigeon-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; }
+    .pigeon-grid input { text-align: center; }
+    .btn-submit { background-color: #0d233a; color: white; padding: 10px 20px; border: none; border-radius: 6px; width: 100%; cursor: pointer; font-size: 16px; }
+    .btn-admin { background-color: #f39c12; color: white; padding: 8px 15px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+    .btn-logout { background-color: #7f8c8d; color: white; padding: 8px 15px; border: none; border-radius: 6px; cursor: pointer; }
     
-    .time-badge { display: inline-block; width: 42px; height: 42px; line-height: 42px; border-radius: 50%; background-color: #e6f0fa; color: #0b2f5c; border: 2px solid #0b2f5c; font-weight: bold; text-align: center; margin: 2px; font-size: 12px; direction: ltr; }
-    .total-badge { background-color: #e8f5e9; border-color: #2e7d32; color: #2e7d32; font-weight: bold; width: auto; padding: 0 10px; border-radius: 20px; }
-    .action-btn { background: #d32f2f; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; width: auto; }
+    .top-bar { display: flex; justify-content: space-between; align-items: center; max-width: 650px; margin: 0 auto 15px auto; }
+    
+    .table-container { margin-top: 20px; overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; background: white; }
+    th { background-color: #0d233a; color: white; padding: 10px; font-size: 14px; }
+    td { border-bottom: 1px solid #ddd; padding: 10px; text-align: center; }
+    
+    .circle { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #0d233a; display: flex; align-items: center; justify-content: center; margin: auto; font-size: 13px; font-weight: bold; }
+    .total-circle { border-color: #2e7d32; color: #2e7d32; }
+    .btn-delete { background-color: #d32f2f; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
+    
+    .admin-only { display: none; }
   </style>
-
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AiZaSyBmHOJF-cRDr2DnM2giryDUlMbu...",
-      authDomain: "gumti-pigeon.firebaseapp.com",
-      databaseURL: "https://gumti-pigeon-default-rtdb.firebaseio.com",
-      projectId: "gumti-pigeon",
-      storageBucket: "gumti-pigeon.firebasestorage.app",
-      messagingSenderId: "976301963421",
-      appId: "1:976301963421:web:ebec5105e7d774...",
-      measurementId: "G-3M61X5Y8CR"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const playersRef = collection(db, "players");
-
-    // Live Table Loading (9 Pigeons + Total)
-    onSnapshot(playersRef, (snapshot) => {
-      const tableBody = document.getElementById("tableBody");
-      tableBody.innerHTML = "";
-      let index = 1;
-
-      snapshot.forEach((docSnapshot) => {
-        const data = docSnapshot.data();
-        const id = docSnapshot.id;
-
-        const row = `
-          <tr>
-            <td>${index++}</td>
-            <td><strong>${data.name}</strong></td>
-            <td><span class="time-badge">${data.p1 || '-'}</span></td>
-            <td><span class="time-badge">${data.p2 || '-'}</span></td>
-            <td><span class="time-badge">${data.p3 || '-'}</span></td>
-            <td><span class="time-badge">${data.p4 || '-'}</span></td>
-            <td><span class="time-badge">${data.p5 || '-'}</span></td>
-            <td><span class="time-badge">${data.p6 || '-'}</span></td>
-            <td><span class="time-badge">${data.p7 || '-'}</span></td>
-            <td><span class="time-badge">${data.p8 || '-'}</span></td>
-            <td><span class="time-badge">${data.p9 || '-'}</span></td>
-            <td><span class="time-badge total-badge">${data.total || '-'}</span></td>
-            <td><button class="action-btn" onclick="deletePlayer('${id}')">حذف</button></td>
-          </tr>
-        `;
-        tableBody.innerHTML += row;
-      });
-    });
-
-    window.savePlayer = async function() {
-      const name = document.getElementById("pName").value;
-      if (!name) { alert("نام لکھنا ضروری ہے!"); return; }
-
-      await addDoc(playersRef, {
-        name: name,
-        p1: document.getElementById("p1").value,
-        p2: document.getElementById("p2").value,
-        p3: document.getElementById("p3").value,
-        p4: document.getElementById("p4").value,
-        p5: document.getElementById("p5").value,
-        p6: document.getElementById("p6").value,
-        p7: document.getElementById("p7").value,
-        p8: document.getElementById("p8").value,
-        p9: document.getElementById("p9").value,
-        total: document.getElementById("pTotal").value
-      });
-
-      // Clear Form
-      for(let i=1; i<=9; i++) document.getElementById(`p${i}`).value = "";
-      document.getElementById("pName").value = "";
-      document.getElementById("pTotal").value = "";
-    };
-
-    window.deletePlayer = async function(id) {
-      if(confirm("کیا آپ اس اینٹری کو ختم کرنا چاہتے ہیں؟")) {
-        await deleteDoc(doc(db, "players", id));
-      }
-    };
-  </script>
 </head>
 <body>
 
   <h2>🏆 گمٹی پیجن فلائنگ ٹورنامنٹ</h2>
 
-  <div class="card">
-    <h3>📝 نئی اینٹری / وقت اپڈیٹ کریں</h3>
+  <div class="top-bar">
+    <div id="statusBadge" style="font-weight: bold; color: #555;">حالت: صرف دیکھنے کی اجازت (Viewer)</div>
+    <button id="adminToggleBtn" class="btn-admin" onclick="toggleAdmin()">🔒 ایڈمن لاگ ان</button>
+  </div>
+
+  <!-- ایڈمن اینٹری فارم (ڈیفالٹ پر چھپا ہوا ہے) -->
+  <div id="adminForm" class="card admin-only">
+    <h3>📝 نئی اینٹری / وقت اپ ڈیٹ کریں</h3>
     <div class="input-group">
-      <label>نام (Name):</label>
-      <input type="text" id="pName" placeholder="نام لکھیں">
+      <label>:نام (Name)</label>
+      <input type="text" id="participantName" placeholder="مثال: علی">
     </div>
-    <div class="inputs-grid">
-      <input type="text" id="p1" placeholder="Pigeon 1">
-      <input type="text" id="p2" placeholder="Pigeon 2">
-      <input type="text" id="p3" placeholder="Pigeon 3">
-      <input type="text" id="p4" placeholder="Pigeon 4">
-      <input type="text" id="p5" placeholder="Pigeon 5">
-      <input type="text" id="p6" placeholder="Pigeon 6">
-      <input type="text" id="p7" placeholder="Pigeon 7">
-      <input type="text" id="p8" placeholder="Pigeon 8">
-      <input type="text" id="p9" placeholder="Pigeon 9">
+
+    <div class="pigeon-grid">
+      <div><label>Pigeon 1</label><input type="text" id="p1" placeholder="12.30"></div>
+      <div><label>Pigeon 2</label><input type="text" id="p2" placeholder="12.40"></div>
+      <div><label>Pigeon 3</label><input type="text" id="p3"></div>
+      <div><label>Pigeon 4</label><input type="text" id="p4"></div>
+      <div><label>Pigeon 5</label><input type="text" id="p5"></div>
+      <div><label>Pigeon 6</label><input type="text" id="p6"></div>
+      <div><label>Pigeon 7</label><input type="text" id="p7"></div>
+      <div><label>Pigeon 8</label><input type="text" id="p8"></div>
+      <div><label>Pigeon 9</label><input type="text" id="p9"></div>
     </div>
-    <div class="input-group">
-      <label>کل وقت (Total Time):</label>
-      <input type="text" id="pTotal" placeholder="مثال: 45.30">
-    </div>
-    <button onclick="savePlayer()">جدول میں شامل کریں 💾</button>
+
+    <button class="btn-submit" onclick="saveData()">💾 جدول میں شامل کریں</button>
   </div>
 
   <div class="table-container">
-    <table>
+    <table id="pigeonTable">
       <thead>
         <tr>
           <th>#</th>
@@ -150,12 +79,149 @@
           <th>Pigeon 8</th>
           <th>Pigeon 9</th>
           <th>کل وقت</th>
-          <th>عملیات</th>
+          <th class="admin-only">عملیات</th>
         </tr>
       </thead>
-      <tbody id="tableBody"></tbody>
+      <tbody id="tableBody">
+      </tbody>
     </table>
   </div>
+
+  <script>
+    const ADMIN_PASSWORD = "1234"; // 🔑 اپنا پاسورڈ یہاں تبدیل کریں
+    let isAdmin = false;
+    let playersData = JSON.parse(localStorage.getItem('pigeonData')) || {};
+
+    function toggleAdmin() {
+      if (isAdmin) {
+        isAdmin = false;
+        updateAdminUI();
+      } else {
+        let pass = prompt("ایڈمن پاسورڈ درج کریں:");
+        if (pass === ADMIN_PASSWORD) {
+          isAdmin = true;
+          updateAdminUI();
+        } else if (pass !== null) {
+          alert("غلط پاسورڈ!");
+        }
+      }
+    }
+
+    function updateAdminUI() {
+      let adminElements = document.querySelectorAll('.admin-only');
+      let btn = document.getElementById('adminToggleBtn');
+      let badge = document.getElementById('statusBadge');
+
+      if (isAdmin) {
+        adminElements.forEach(el => el.style.display = 'block');
+        // ٹیبل کالم درست دکھانے کے لیے
+        document.querySelectorAll('th.admin-only, td.admin-only').forEach(el => el.style.display = 'table-cell');
+        btn.innerText = "🔓 لاگ آؤٹ";
+        btn.className = "btn-logout";
+        badge.innerText = "حالت: ایڈمن موڈ (ایڈٹ کی اجازت ہے)";
+        badge.style.color = "#2e7d32";
+      } else {
+        adminElements.forEach(el => el.style.display = 'none');
+        btn.innerText = "🔒 ایڈمن لاگ ان";
+        btn.className = "btn-admin";
+        badge.innerText = "حالت: صرف دیکھنے کی اجازت (Viewer)";
+        badge.style.color = "#555";
+      }
+      renderTable();
+    }
+
+    function calculateMinutes(timeStr) {
+      if (!timeStr) return 0;
+      let cleanTime = timeStr.replace('.', ':');
+      let parts = cleanTime.split(':');
+      let hours = parseInt(parts[0]) || 0;
+      let minutes = parseInt(parts[1]) || 0;
+
+      if (hours < 6) hours += 12;
+
+      let totalFlyMinutes = ((hours - 6) * 60) + minutes;
+      return totalFlyMinutes > 0 ? totalFlyMinutes : 0;
+    }
+
+    function formatTotalTime(totalMinutes) {
+      if (totalMinutes <= 0) return "-";
+      let hrs = Math.floor(totalMinutes / 60);
+      let mins = totalMinutes % 60;
+      return `${hrs}.${mins < 10 ? '0' : ''}${mins}`;
+    }
+
+    function saveData() {
+      let name = document.getElementById('participantName').value.trim();
+      if (!name) {
+        alert('براہ کرم نام درج کریں!');
+        return;
+      }
+
+      if (!playersData[name]) {
+        playersData[name] = Array(9).fill('-');
+      }
+
+      for (let i = 1; i <= 9; i++) {
+        let inputVal = document.getElementById(`p${i}`).value.trim();
+        if (inputVal !== "") {
+          playersData[name][i - 1] = inputVal;
+        }
+      }
+
+      localStorage.setItem('pigeonData', JSON.stringify(playersData));
+      renderTable();
+      clearInputs();
+    }
+
+    function renderTable() {
+      let tbody = document.getElementById('tableBody');
+      tbody.innerHTML = '';
+      let index = 1;
+
+      for (let name in playersData) {
+        let row = document.createElement('tr');
+        let pTimes = playersData[name];
+        
+        let rowTotalMinutes = 0;
+        let pigeonCells = pTimes.map(time => {
+          if (time !== '-') rowTotalMinutes += calculateMinutes(time);
+          return `<td><div class="circle">${time}</div></td>`;
+        }).join('');
+
+        let totalFormatted = formatTotalTime(rowTotalMinutes);
+
+        let actionTd = isAdmin ? `<td class="admin-only"><button class="btn-delete" onclick="deletePlayer('${name}')">حذف</button></td>` : '';
+
+        row.innerHTML = `
+          <td>${index++}</td>
+          <td><b>${name}</b></td>
+          ${pigeonCells}
+          <td><div class="circle total-circle">${totalFormatted}</div></td>
+          ${actionTd}
+        `;
+
+        tbody.appendChild(row);
+      }
+    }
+
+    function deletePlayer(name) {
+      if (confirm(`کیا آپ ${name} کی اینٹری ختم کرنا چاہتے ہیں؟`)) {
+        delete playersData[name];
+        localStorage.setItem('pigeonData', JSON.stringify(playersData));
+        renderTable();
+      }
+    }
+
+    function clearInputs() {
+      document.getElementById('participantName').value = '';
+      for (let i = 1; i <= 9; i++) {
+        document.getElementById(`p${i}`).value = '';
+      }
+    }
+
+    // ابتدائی لوڈ پر ٹیبل دکھائیں
+    renderTable();
+  </script>
 
 </body>
 </html>
