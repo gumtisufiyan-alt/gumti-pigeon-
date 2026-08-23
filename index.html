@@ -3,50 +3,62 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tournament Leaderboard</title>
+  <title>گمٹی پیجن فلائنگ ٹورنامنٹ</title>
   <style>
-    * { box-sizing: border-box; font-family: sans-serif; margin: 0; padding: 0; }
+    * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; padding: 0; }
     body { background-color: #f8f9fa; font-size: 13px; direction: rtl; }
     
-    .header-banner { background-color: #0088cc; color: white; padding: 10px 15px; font-weight: bold; font-size: 15px; }
-    .sub-banner { background-color: #4fc3f7; color: white; padding: 8px 15px; font-weight: bold; }
-    .winner-box { background-color: #fff8e1; border: 1px solid #ffe082; padding: 8px 15px; margin: 5px 0; font-weight: bold; }
+    /* Header Banners - ApnaShauq Style */
+    .header-banner { background: linear-gradient(135deg, #0052d4, #0088cc); color: white; padding: 12px 15px; font-weight: bold; font-size: 18px; text-align: center; }
+    .sub-banner { background-color: #0288d1; color: white; padding: 8px 15px; font-weight: 500; text-align: center; font-size: 13px; }
     
+    .winner-box { padding: 8px 15px; font-weight: bold; font-size: 13px; border-bottom: 1px solid #e0e0e0; }
+    .winner-box.first { background-color: #4fc3f7; color: white; }
+    .winner-box.last { background-color: #fff8e1; color: #5d4037; border-color: #ffe082; }
+
+    /* Leaderboard Table */
     .table-container { overflow-x: auto; padding: 10px; }
-    table { width: 100%; border-collapse: collapse; background: white; text-align: center; min-width: 700px; }
-    th, td { border: 1px solid #dee2e6; padding: 8px 5px; }
-    th { background-color: #e9ecef; font-size: 12px; }
-    tr:nth-child(even) { background-color: #f2f2f2; }
+    table { width: 100%; border-collapse: collapse; background: white; text-align: center; min-width: 800px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    th, td { border: 1px solid #dee2e6; padding: 8px 4px; }
+    th { background-color: #e9ecef; font-size: 12px; font-weight: bold; color: #333; }
+    tr:nth-child(even) { background-color: #f8f9fa; }
     
-    .admin-form { background: white; padding: 15px; margin: 15px; border-radius: 8px; box-shadow: 0 0 5px rgba(0,0,0,0.1); }
-    .admin-form input { padding: 8px; margin: 5px 0; width: 100%; border: 1px solid #ccc; border-radius: 4px; }
-    .btn { background: #0088cc; color: white; border: none; padding: 10px; width: 100%; cursor: pointer; border-radius: 4px; font-weight: bold; }
+    /* Entry / Admin Panel */
+    .admin-form { background: white; padding: 15px; margin: 15px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+    .admin-form h3 { font-size: 15px; margin-bottom: 10px; color: #0052d4; text-align: center; }
+    .admin-form input { padding: 8px 10px; margin: 5px 0; width: 100%; border: 1px solid #ccc; border-radius: 4px; font-size: 13px; text-align: right; }
+    .btn { background: #0052d4; color: white; border: none; padding: 10px; width: 100%; cursor: pointer; border-radius: 4px; font-weight: bold; font-size: 14px; margin-top: 5px; }
+    .btn:hover { background-color: #003b99; }
   </style>
 </head>
 <body>
 
+  <!-- Main Banner -->
   <div class="header-banner">
-    استاد فیصل گھمن چیمپئن ٹرافی
+    🕊️ گمٹی پیجن فلائنگ ٹورنامنٹ 🏆
   </div>
   
+  <!-- Sub Banner Details -->
   <div class="sub-banner">
-    Lofts: 25 | Total pigeons: 525 | Pigeons landed: 481 | Pigeons remaining: 44
+    مقام: گمٹی شریف | تاریخ: 11 ستمبر 2026 | Start Time: 06:30 AM | کل کبوتر: 11
   </div>
 
-  <div class="winner-box" style="background-color: #4fc3f7; color: white;">
-    First Winner Bird: چوہدری شمس میرانہ — Time: 11:45:00
+  <!-- Highlights -->
+  <div class="winner-box first" id="firstWinnerDisplay">
+    First Winner Bird: ابھی ریکارڈ نہیں — Time: --:--
   </div>
   
-  <div class="winner-box">
-    Last Winner Bird: حسن چٹ & عمر چٹ — Time: 18:59
+  <div class="winner-box last" id="lastWinnerDisplay">
+    Last Winner Bird: ابھی ریکارڈ نہیں — Time: --:--
   </div>
 
-  <!-- Leaderboard Table -->
+  <!-- Main Table View -->
   <div class="table-container">
     <table>
       <thead>
         <tr>
           <th>#</th>
+          <th>Pic</th>
           <th>Name</th>
           <th>Pigeon 1</th>
           <th>Pigeon 2</th>
@@ -61,49 +73,44 @@
       <tbody id="tableBody">
         <tr>
           <td>1</td>
-          <td>سمیع اللہ چٹ & خلیل چٹ</td>
-          <td>11:30</td>
-          <td>13:04</td>
-          <td>13:17</td>
-          <td>13:22</td>
-          <td>13:34</td>
-          <td>13:46</td>
-          <td>14:21</td>
-          <td>14:22</td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>حسن چٹ & عمر چٹ</td>
-          <td>11:39</td>
-          <td>11:44</td>
-          <td>12:16</td>
-          <td>14:49</td>
-          <td>15:24</td>
-          <td>15:35</td>
-          <td>15:48</td>
-          <td>15:54</td>
+          <td>🕊️</td>
+          <td>گمٹی شریف (نام درج کریں)</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
         </tr>
       </tbody>
     </table>
   </div>
 
-  <!-- Entry / Update Form -->
+  <!-- Admin Input Form -->
   <div class="admin-form">
-    <h3>Nayi Entry Karein / Data Badlein</h3>
+    <h3>نئی اینٹری / وقت اپڈیٹ کریں 📝</h3>
     <input type="text" id="pName" placeholder="مالک کا نام">
-    <input type="text" id="pTimes" placeholder="اوقات (مثلاً: 11:30, 12:00, 12:30...)">
-    <button class="btn" onclick="addRow()">Table Mein Shamil Karein</button>
+    <input type="text" id="pTimes" placeholder="اوقات (کاما کے ساتھ، مثلاً: 11:30, 12:00, 12:30...)">
+    <button class="btn" onclick="addRow()">جدول میں شامل کریں 💾</button>
   </div>
 
   <script>
     function addRow() {
       const name = document.getElementById('pName').value;
-      const times = document.getElementById('pTimes').value.split(',');
-      if(!name) return alert('Naam likhein');
+      const timesInput = document.getElementById('pTimes').value;
       
+      if(!name) {
+        alert('براہ کرم مالک کا نام درج کریں!');
+        return;
+      }
+      
+      const times = timesInput ? timesInput.split(',') : [];
       const tbody = document.getElementById('tableBody');
       const rowCount = tbody.rows.length + 1;
-      let rowHtml = `<tr><td>${rowCount}</td><td>${name}</td>`;
+      
+      let rowHtml = `<tr><td>${rowCount}</td><td>🕊️</td><td>${name}</td>`;
       
       for(let i = 0; i < 8; i++) {
         rowHtml += `<td>${times[i] ? times[i].trim() : '-'}</td>`;
@@ -111,6 +118,7 @@
       rowHtml += '</tr>';
       
       tbody.innerHTML += rowHtml;
+      
       document.getElementById('pName').value = '';
       document.getElementById('pTimes').value = '';
     }
