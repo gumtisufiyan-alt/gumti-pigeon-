@@ -1,220 +1,139 @@
 <!DOCTYPE html>
 <html lang="ur" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>گمٹی پیجن فلائنگ ٹورنامنٹ</title>
-    <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f6f9; padding: 15px; margin: 0; text-align: center; }
-        h1 { margin-bottom: 20px; }
-        
-        .card { background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); max-width: 500px; margin: 0 auto 20px auto; }
-        input, button { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; text-align: center; }
-        button { background-color: #0b2f5c; color: white; border: none; cursor: pointer; font-weight: bold; }
-        button:hover { background-color: #071f3d; }
-        
-        .admin-btn { background-color: #4CAF50; max-width: 200px; margin-bottom: 10px; }
-        .delete-btn { background-color: #d32f2f; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 12px; }
-        .delete-btn:hover { background-color: #9a0007; }
-        
-        .table-container { overflow-x: auto; max-width: 100%; }
-        table { width: 100%; border-collapse: collapse; background: white; min-width: 1000px; }
-        th { background-color: #0b2f5c; color: white; padding: 10px; border: 1px solid #0b2f5c; font-size: 13px; }
-        td { padding: 8px; border: 1px solid #e0e0e0; font-size: 13px; }
-        
-        .time-badge { border: 1px solid #0b2f5c; padding: 3px 6px; border-radius: 5px; display: inline-block; font-weight: bold; color: #0b2f5c; }
-        .total-badge { background-color: #e8f5e9; border: 1px solid #2e7d32; color: #2e7d32; font-weight: bold; padding: 4px 8px; border-radius: 5px; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>گمٹی پیجن فلائنگ ٹورنامنٹ</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f4f7f6; padding: 20px; direction: rtl; }
+    h2 { text-align: center; }
+    .card { background: white; padding: 15px; border-radius: 8px; max-width: 400px; margin: 0 auto 20px auto; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .input-group { margin-bottom: 10px; }
+    .input-group label { display: block; margin-bottom: 5px; }
+    .input-group input { width: 100%; padding: 8px; box-sizing: border-box; }
+    button { background: #0b2f5c; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; width: 100%; }
+    table { width: 100%; border-collapse: collapse; background: white; margin-top: 20px; }
+    th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
+    th { background-color: #0b2f5c; color: white; }
+    .action-btn { background: #d32f2f; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
+  </style>
+
+  <!-- Firebase Script -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    // Aap ke Firebase Credentials
+    const firebaseConfig = {
+      apiKey: "AiZaSyBmHOJF-cRDr2DnM2giryDUlMbu...",
+      authDomain: "gumti-pigeon.firebaseapp.com",
+      databaseURL: "https://gumti-pigeon-default...",
+      projectId: "gumti-pigeon",
+      storageBucket: "gumti-pigeon.firebasestor...",
+      messagingSenderId: "976301963421",
+      appId: "1:976301963421:web:ebec5105e7d774...",
+      measurementId: "G-3M61X5Y8CR"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const playersRef = collection(db, "players");
+
+    // Live Fetching (No Refresh Needed)
+    onSnapshot(playersRef, (snapshot) => {
+      const tableBody = document.getElementById("tableBody");
+      tableBody.innerHTML = "";
+      let index = 1;
+
+      snapshot.forEach((docSnapshot) => {
+        const data = docSnapshot.data();
+        const id = docSnapshot.id;
+
+        const row = `
+          <tr>
+            <td>${index++}</td>
+            <td><strong>${data.name}</strong></td>
+            <td>${data.p1 || '-'}</td>
+            <td>${data.p2 || '-'}</td>
+            <td>${data.p3 || '-'}</td>
+            <td>
+              <button class="action-btn" onclick="deletePlayer('${id}')">Delete</button>
+            </td>
+          </tr>
+        `;
+        tableBody.innerHTML += row;
+      });
+    });
+
+    // Add Player Function
+    window.savePlayer = async function() {
+      const name = document.getElementById("pName").value;
+      const p1 = document.getElementById("p1Time").value;
+      const p2 = document.getElementById("p2Time").value;
+      const p3 = document.getElementById("p3Time").value;
+
+      if (!name) {
+        alert("Meherbani karke Naam likhein!");
+        return;
+      }
+
+      await addDoc(playersRef, { name, p1, p2, p3 });
+      
+      document.getElementById("pName").value = "";
+      document.getElementById("p1Time").value = "";
+      document.getElementById("p2Time").value = "";
+      document.getElementById("p3Time").value = "";
+    };
+
+    // Delete Player Function
+    window.deletePlayer = async function(id) {
+      if(confirm("Kya aap is entry ko delete karna chahte hain?")) {
+        await deleteDoc(doc(db, "players", id));
+      }
+    };
+  </script>
 </head>
 <body>
 
-    <h1>🏆 گمٹی پیجن فلائنگ ٹورنامنٹ</h1>
+  <h2>🏆 گمٹی پیجن فلائنگ ٹورنامنٹ</h2>
 
-    <!-- Admin Login Button -->
-    <button class="admin-btn" onclick="toggleAdmin()">🔐 Admin Login</button>
-
-    <!-- Admin Entry Form (Initially Hidden) -->
-    <div id="adminForm" class="card" style="display: none;">
-        <h3>📝 نئی اینٹری / وقت اپڈیٹ کریں</h3>
-        <input type="text" id="ownerName" placeholder="مالک کا نام (مثلاً Ehsan)">
-        <input type="text" id="timesInput" placeholder="بیٹھنے کے اوقات (مثلاً 12.50, 01.15, 02.25)">
-        <button onclick="addOrUpdateEntry()">💾 جدول میں شامل کریں</button>
+  <!-- Admin Panel -->
+  <div class="card">
+    <h3>📝 نئی اینٹری / نام اپڈیٹ کریں</h3>
+    <div class="input-group">
+      <label>نام (Name):</label>
+      <input type="text" id="pName" placeholder="Naam likhein">
     </div>
-
-    <!-- Results Table -->
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>Total Time</th>
-                    <th>Pigeon 9</th>
-                    <th>Pigeon 8</th>
-                    <th>Pigeon 7</th>
-                    <th>Pigeon 6</th>
-                    <th>Pigeon 5</th>
-                    <th>Pigeon 4</th>
-                    <th>Pigeon 3</th>
-                    <th>Pigeon 2</th>
-                    <th>Pigeon 1</th>
-                    <th>Name</th>
-                    <th>#</th>
-                    <th id="actionHeader" style="display: none;">Action</th>
-                </tr>
-            </thead>
-            <tbody id="pigeonTableBody">
-                <!-- Data Rows Will Appear Here -->
-            </tbody>
-        </table>
+    <div class="input-group">
+      <label>Pigeon 1 Time:</label>
+      <input type="text" id="p1Time" placeholder="12.50">
     </div>
+    <div class="input-group">
+      <label>Pigeon 2 Time:</label>
+      <input type="text" id="p2Time" placeholder="01.15">
+    </div>
+    <div class="input-group">
+      <label>Pigeon 3 Time:</label>
+      <input type="text" id="p3Time" placeholder="02.25">
+    </div>
+    <button onclick="savePlayer()">جدول میں شامل کریں</button>
+  </div>
 
-    <script>
-        const ADMIN_PASSWORD = "1234"; 
-        let isAdminLoggedIn = false;
-        const START_TIME = "06.00"; 
+  <!-- Live Table -->
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Pigeon 1</th>
+        <th>Pigeon 2</th>
+        <th>Pigeon 3</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody">
+    </tbody>
+  </table>
 
-        // 9 کبوتروں کا ڈیٹا
-        let players = [
-            { name: "Ali", times: ["12.50", "01.15", "02.25", "-", "-", "-", "-", "-", "-"] },
-            { name: "Itsham", times: ["2.50", "-", "-", "-", "-", "-", "-", "-", "-"] },
-            { name: "Khuram", times: ["9.50", "-", "-", "-", "-", "-", "-", "-", "-"] },
-            { name: "Ahmed", times: ["2.34", "-", "-", "-", "-", "-", "-", "-", "-"] },
-            { name: "Taaj", times: ["4.16", "4.20", "4.30", "-", "-", "-", "-", "-", "-"] },
-            { name: "Rehman", times: ["7.15", "-", "-", "-", "-", "-", "-", "-", "-"] },
-            { name: "Tariq", times: ["6.45", "-", "-", "-", "-", "-", "-", "-", "-"] },
-            { name: "Tanveer", times: ["8.45", "-", "-", "-", "-", "-", "-", "-", "-"] },
-            { name: "Phoola", times: ["10.15", "-", "-", "-", "-", "-", "-", "-", "-"] }
-        ];
-
-        // Total Flying Time Calculation
-        function calculateTotalTime(timesArray) {
-            let totalMinutes = 0;
-            let hasValidTime = false;
-
-            let startParts = START_TIME.split('.');
-            let startInMinutes = (parseInt(startParts[0]) * 60) + (parseInt(startParts[1]) || 0);
-
-            timesArray.forEach(t => {
-                if (t && t !== '-') {
-                    let parts = t.toString().trim().split('.');
-                    let h = parseInt(parts[0]) || 0;
-                    let m = parseInt(parts[1]) || 0;
-
-                    if (h < 6) {
-                        h += 12; 
-                    }
-
-                    let landingInMinutes = (h * 60) + m;
-
-                    if (landingInMinutes >= startInMinutes) {
-                        totalMinutes += (landingInMinutes - startInMinutes);
-                        hasValidTime = true;
-                    }
-                }
-            });
-
-            if (!hasValidTime) return "-";
-
-            let totalHours = Math.floor(totalMinutes / 60);
-            let remainingMinutes = totalMinutes % 60;
-
-            return `${totalHours}.${remainingMinutes < 10 ? '0' : ''}${remainingMinutes}`;
-        }
-
-        // Table Render Function
-        function renderTable() {
-            const tbody = document.getElementById('pigeonTableBody');
-            tbody.innerHTML = '';
-
-            players.forEach((player, index) => {
-                let totalTime = calculateTotalTime(player.times);
-                
-                let rowHtml = `<tr>
-                    <td><span class="total-badge">${totalTime}</span></td>`;
-                
-                // Show pigeons from Pigeon 9 down to Pigeon 1
-                for (let i = 8; i >= 0; i--) {
-                    let val = player.times[i] || '-';
-                    if (val !== '-') {
-                        rowHtml += `<td><span class="time-badge">${val}</span></td>`;
-                    } else {
-                        rowHtml += `<td>-</td>`;
-                    }
-                }
-
-                rowHtml += `<td><strong>${player.name}</strong></td>
-                    <td>${index + 1}</td>`;
-
-                // Add delete button column if Admin is logged in
-                if (isAdminLoggedIn) {
-                    rowHtml += `<td><button class="delete-btn" onclick="deletePlayer(${index})">حذف کریں</button></td>`;
-                }
-
-                rowHtml += `</tr>`;
-                
-                tbody.innerHTML += rowHtml;
-            });
-        }
-
-        // Admin Toggle Function
-        function toggleAdmin() {
-            if (!isAdminLoggedIn) {
-                let pass = prompt("ایڈمن پاسورڈ درج کریں:");
-                if (pass === ADMIN_PASSWORD) {
-                    isAdminLoggedIn = true;
-                    document.getElementById('adminForm').style.display = 'block';
-                    document.getElementById('actionHeader').style.display = 'table-cell';
-                    alert("لاگ ان کامیاب!");
-                } else {
-                    alert("غلط پاسورڈ!");
-                }
-            } else {
-                isAdminLoggedIn = false;
-                document.getElementById('adminForm').style.display = 'none';
-                document.getElementById('actionHeader').style.display = 'none';
-            }
-            renderTable();
-        }
-
-        // Delete Player Function
-        function deletePlayer(index) {
-            if (confirm(`کیا آپ واقعی ${players[index].name} کا ریکارڈر حذف کرنا چاہتے ہیں؟`)) {
-                players.splice(index, 1);
-                renderTable();
-            }
-        }
-
-        // Add or Update Entry
-        function addOrUpdateEntry() {
-            let name = document.getElementById('ownerName').value.trim();
-            let timesRaw = document.getElementById('timesInput').value.trim();
-
-            if (!name || !timesRaw) {
-                alert("براہ کرم نام اور اوقات درست درج کریں۔");
-                return;
-            }
-
-            let timesArr = timesRaw.split(',').map(t => t.trim());
-            
-            // 9 کبوتروں کے لیے فل کریں
-            while (timesArr.length < 9) {
-                timesArr.push('-');
-            }
-
-            let existingPlayer = players.find(p => p.name.toLowerCase() === name.toLowerCase());
-            if (existingPlayer) {
-                existingPlayer.times = timesArr;
-            } else {
-                players.push({ name: name, times: timesArr });
-            }
-
-            document.getElementById('ownerName').value = '';
-            document.getElementById('timesInput').value = '';
-            renderTable();
-            alert("ریکارڈ کامیابی سے اپڈیٹ ہو گیا!");
-        }
-
-        // Initial Load
-        renderTable();
-    </script>
 </body>
 </html>
