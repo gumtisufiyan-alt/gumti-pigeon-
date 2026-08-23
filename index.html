@@ -5,31 +5,36 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>گمٹی پیجن فلائنگ ٹورنامنٹ</title>
   <style>
-    body { font-family: Arial, sans-serif; background: #f4f7f6; padding: 20px; direction: rtl; }
-    h2 { text-align: center; }
-    .card { background: white; padding: 15px; border-radius: 8px; max-width: 400px; margin: 0 auto 20px auto; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    body { font-family: Arial, sans-serif; padding: 20px; background-color: #f4f7f6; direction: rtl; }
+    h2 { text-align: center; color: #0b2f5c; }
+    .card { background: white; padding: 15px; border-radius: 8px; max-width: 500px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin: 0 auto 20px auto; }
     .input-group { margin-bottom: 10px; }
-    .input-group label { display: block; margin-bottom: 5px; }
-    .input-group input { width: 100%; padding: 8px; box-sizing: border-box; }
-    button { background: #0b2f5c; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; width: 100%; }
-    table { width: 100%; border-collapse: collapse; background: white; margin-top: 20px; }
-    th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
-    th { background-color: #0b2f5c; color: white; }
-    .action-btn { background: #d32f2f; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
+    .input-group label { display: block; margin-bottom: 5px; font-weight: bold; }
+    .input-group input { width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+    .inputs-grid { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+    .inputs-grid input { width: 30%; padding: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; text-align: center; }
+    button { background: #0b2f5c; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; width: 100%; font-size: 16px; font-weight: bold; }
+    button:hover { background-color: #071f3d; }
+    .table-container { overflow-x: auto; max-width: 100%; }
+    table { width: 100%; border-collapse: collapse; background: white; min-width: 800px; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+    th { background-color: #0b2f5c; color: white; font-size: 14px; }
+    
+    .time-badge { display: inline-block; width: 42px; height: 42px; line-height: 42px; border-radius: 50%; background-color: #e6f0fa; color: #0b2f5c; border: 2px solid #0b2f5c; font-weight: bold; text-align: center; margin: 2px; font-size: 12px; direction: ltr; }
+    .total-badge { background-color: #e8f5e9; border-color: #2e7d32; color: #2e7d32; font-weight: bold; width: auto; padding: 0 10px; border-radius: 20px; }
+    .action-btn { background: #d32f2f; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; width: auto; }
   </style>
 
-  <!-- Firebase Script -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // Aap ke Firebase Credentials
     const firebaseConfig = {
       apiKey: "AiZaSyBmHOJF-cRDr2DnM2giryDUlMbu...",
       authDomain: "gumti-pigeon.firebaseapp.com",
-      databaseURL: "https://gumti-pigeon-default...",
+      databaseURL: "https://gumti-pigeon-default-rtdb.firebaseio.com",
       projectId: "gumti-pigeon",
-      storageBucket: "gumti-pigeon.firebasestor...",
+      storageBucket: "gumti-pigeon.firebasestorage.app",
       messagingSenderId: "976301963421",
       appId: "1:976301963421:web:ebec5105e7d774...",
       measurementId: "G-3M61X5Y8CR"
@@ -39,7 +44,7 @@
     const db = getFirestore(app);
     const playersRef = collection(db, "players");
 
-    // Live Fetching (No Refresh Needed)
+    // Live Table Loading (9 Pigeons + Total)
     onSnapshot(playersRef, (snapshot) => {
       const tableBody = document.getElementById("tableBody");
       tableBody.innerHTML = "";
@@ -53,41 +58,49 @@
           <tr>
             <td>${index++}</td>
             <td><strong>${data.name}</strong></td>
-            <td>${data.p1 || '-'}</td>
-            <td>${data.p2 || '-'}</td>
-            <td>${data.p3 || '-'}</td>
-            <td>
-              <button class="action-btn" onclick="deletePlayer('${id}')">Delete</button>
-            </td>
+            <td><span class="time-badge">${data.p1 || '-'}</span></td>
+            <td><span class="time-badge">${data.p2 || '-'}</span></td>
+            <td><span class="time-badge">${data.p3 || '-'}</span></td>
+            <td><span class="time-badge">${data.p4 || '-'}</span></td>
+            <td><span class="time-badge">${data.p5 || '-'}</span></td>
+            <td><span class="time-badge">${data.p6 || '-'}</span></td>
+            <td><span class="time-badge">${data.p7 || '-'}</span></td>
+            <td><span class="time-badge">${data.p8 || '-'}</span></td>
+            <td><span class="time-badge">${data.p9 || '-'}</span></td>
+            <td><span class="time-badge total-badge">${data.total || '-'}</span></td>
+            <td><button class="action-btn" onclick="deletePlayer('${id}')">حذف</button></td>
           </tr>
         `;
         tableBody.innerHTML += row;
       });
     });
 
-    // Add Player Function
     window.savePlayer = async function() {
       const name = document.getElementById("pName").value;
-      const p1 = document.getElementById("p1Time").value;
-      const p2 = document.getElementById("p2Time").value;
-      const p3 = document.getElementById("p3Time").value;
+      if (!name) { alert("نام لکھنا ضروری ہے!"); return; }
 
-      if (!name) {
-        alert("Meherbani karke Naam likhein!");
-        return;
-      }
+      await addDoc(playersRef, {
+        name: name,
+        p1: document.getElementById("p1").value,
+        p2: document.getElementById("p2").value,
+        p3: document.getElementById("p3").value,
+        p4: document.getElementById("p4").value,
+        p5: document.getElementById("p5").value,
+        p6: document.getElementById("p6").value,
+        p7: document.getElementById("p7").value,
+        p8: document.getElementById("p8").value,
+        p9: document.getElementById("p9").value,
+        total: document.getElementById("pTotal").value
+      });
 
-      await addDoc(playersRef, { name, p1, p2, p3 });
-      
+      // Clear Form
+      for(let i=1; i<=9; i++) document.getElementById(`p${i}`).value = "";
       document.getElementById("pName").value = "";
-      document.getElementById("p1Time").value = "";
-      document.getElementById("p2Time").value = "";
-      document.getElementById("p3Time").value = "";
+      document.getElementById("pTotal").value = "";
     };
 
-    // Delete Player Function
     window.deletePlayer = async function(id) {
-      if(confirm("Kya aap is entry ko delete karna chahte hain?")) {
+      if(confirm("کیا آپ اس اینٹری کو ختم کرنا چاہتے ہیں؟")) {
         await deleteDoc(doc(db, "players", id));
       }
     };
@@ -97,43 +110,52 @@
 
   <h2>🏆 گمٹی پیجن فلائنگ ٹورنامنٹ</h2>
 
-  <!-- Admin Panel -->
   <div class="card">
-    <h3>📝 نئی اینٹری / نام اپڈیٹ کریں</h3>
+    <h3>📝 نئی اینٹری / وقت اپڈیٹ کریں</h3>
     <div class="input-group">
       <label>نام (Name):</label>
-      <input type="text" id="pName" placeholder="Naam likhein">
+      <input type="text" id="pName" placeholder="نام لکھیں">
+    </div>
+    <div class="inputs-grid">
+      <input type="text" id="p1" placeholder="Pigeon 1">
+      <input type="text" id="p2" placeholder="Pigeon 2">
+      <input type="text" id="p3" placeholder="Pigeon 3">
+      <input type="text" id="p4" placeholder="Pigeon 4">
+      <input type="text" id="p5" placeholder="Pigeon 5">
+      <input type="text" id="p6" placeholder="Pigeon 6">
+      <input type="text" id="p7" placeholder="Pigeon 7">
+      <input type="text" id="p8" placeholder="Pigeon 8">
+      <input type="text" id="p9" placeholder="Pigeon 9">
     </div>
     <div class="input-group">
-      <label>Pigeon 1 Time:</label>
-      <input type="text" id="p1Time" placeholder="12.50">
+      <label>کل وقت (Total Time):</label>
+      <input type="text" id="pTotal" placeholder="مثال: 45.30">
     </div>
-    <div class="input-group">
-      <label>Pigeon 2 Time:</label>
-      <input type="text" id="p2Time" placeholder="01.15">
-    </div>
-    <div class="input-group">
-      <label>Pigeon 3 Time:</label>
-      <input type="text" id="p3Time" placeholder="02.25">
-    </div>
-    <button onclick="savePlayer()">جدول میں شامل کریں</button>
+    <button onclick="savePlayer()">جدول میں شامل کریں 💾</button>
   </div>
 
-  <!-- Live Table -->
-  <table>
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Name</th>
-        <th>Pigeon 1</th>
-        <th>Pigeon 2</th>
-        <th>Pigeon 3</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody id="tableBody">
-    </tbody>
-  </table>
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>نام</th>
+          <th>Pigeon 1</th>
+          <th>Pigeon 2</th>
+          <th>Pigeon 3</th>
+          <th>Pigeon 4</th>
+          <th>Pigeon 5</th>
+          <th>Pigeon 6</th>
+          <th>Pigeon 7</th>
+          <th>Pigeon 8</th>
+          <th>Pigeon 9</th>
+          <th>کل وقت</th>
+          <th>عملیات</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
 
 </body>
 </html>
