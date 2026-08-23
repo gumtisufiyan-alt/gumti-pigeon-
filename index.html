@@ -1,105 +1,147 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ur" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Gumti Pigeon Flying Tournament</title>
 
 <style>
-*{box-sizing:border-box}
+*{
+    box-sizing:border-box;
+}
 
 body{
     margin:0;
-    font-family:Arial,sans-serif;
-    background:#071b14;
+    font-family:Arial, "Noto Nastaliq Urdu", sans-serif;
+    background:
+        radial-gradient(circle at top,#124c35,#061810 65%);
     color:white;
 }
 
 header{
     text-align:center;
-    padding:25px 10px;
-    background:linear-gradient(135deg,#063b28,#0b6b47);
+    padding:25px 15px;
+    background:linear-gradient(135deg,#063c29,#08704a);
     border-bottom:3px solid #ffd700;
+    box-shadow:0 5px 20px rgba(0,0,0,.4);
 }
 
 header h1{
     margin:0;
     color:#ffd700;
-    font-size:28px;
+    font-size:30px;
 }
 
 header p{
     margin:8px 0 0;
-    font-size:16px;
+    color:#e5fff4;
 }
 
 .container{
-    max-width:1400px;
+    max-width:1700px;
     margin:auto;
     padding:20px 10px;
 }
 
-.table-wrap{
+.live{
+    text-align:center;
+    margin:10px 0 20px;
+    color:#72ffb7;
+    font-weight:bold;
+}
+
+.table-box{
+    width:100%;
     overflow-x:auto;
-    background:#0b281e;
-    border-radius:15px;
-    box-shadow:0 0 25px #000;
+    background:#082319;
+    border-radius:18px;
+    box-shadow:0 8px 30px rgba(0,0,0,.45);
 }
 
 table{
     width:100%;
-    min-width:1250px;
-    border-collapse:collapse;
-}
-
-th,td{
-    padding:12px 7px;
-    text-align:center;
-    border:1px solid #315447;
+    min-width:1500px;
+    border-collapse:separate;
+    border-spacing:0;
 }
 
 th{
-    background:#0e6041;
+    background:#0d6543;
     color:#ffd700;
-    font-size:15px;
+    padding:14px 8px;
+    border-bottom:2px solid #ffd700;
+    font-size:14px;
 }
 
-.player-name{
-    background:#123d2d;
-    color:#fff;
+td{
+    background:#0b2c20;
+    border-bottom:1px solid #315447;
+    padding:10px 6px;
+    text-align:center;
+}
+
+tr:hover td{
+    background:#103b2b;
+}
+
+.player{
+    min-width:140px;
     font-size:19px;
     font-weight:bold;
-    min-width:130px;
+    color:#ffd700;
+    position:sticky;
+    left:0;
+    background:#123c2b;
+    z-index:2;
 }
 
-.time-circle{
-    width:72px;
-    height:72px;
-    border-radius:50%;
-    background:#123f2d;
-    border:3px solid #ffd700;
+.pigeon-box{
     display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:5px;
+}
+
+.circle{
+    width:78px;
+    height:78px;
+    border-radius:50%;
+    border:3px solid #ffd700;
+    background:radial-gradient(circle,#18563d,#08281d);
+    display:flex;
+    flex-direction:column;
     align-items:center;
     justify-content:center;
-    margin:auto;
-    font-size:15px;
-    font-weight:bold;
-    color:#fff;
+    box-shadow:0 0 15px rgba(255,215,0,.12);
 }
 
-.total-circle{
-    background:#6d5200;
-    border:3px solid #ffd700;
+.circle strong{
+    font-size:16px;
+}
+
+.circle small{
+    color:#bde8d3;
+    font-size:10px;
+}
+
+.total{
+    width:95px;
+    height:95px;
+    background:radial-gradient(circle,#806300,#403200);
+}
+
+.total strong{
+    font-size:17px;
     color:#fff;
-    font-size:14px;
 }
 
 .admin{
     margin-top:25px;
-    background:#0d3023;
     padding:20px;
-    border-radius:15px;
+    background:#0b2b20;
     border:1px solid #315447;
+    border-radius:18px;
 }
 
 .admin h2{
@@ -107,36 +149,45 @@ th{
     margin-top:0;
 }
 
-input{
-    background:#071b14;
-    color:white;
-    border:1px solid #55796a;
-    border-radius:7px;
-    padding:9px;
-    width:95px;
+.login{
+    max-width:400px;
+    margin:30px auto;
+    padding:25px;
+    background:#0b2b20;
+    border-radius:18px;
     text-align:center;
 }
 
-.name-input{
-    width:130px;
+input, select{
+    background:#061810;
+    color:white;
+    border:1px solid #4e7966;
+    border-radius:7px;
+    padding:9px;
+    text-align:center;
 }
 
 button{
     border:0;
     border-radius:8px;
     padding:10px 16px;
-    margin:5px;
     cursor:pointer;
     font-weight:bold;
+    margin:4px;
 }
 
-.login-btn,.save-btn{
+.btn{
     background:#ffd700;
-    color:#071b14;
+    color:#061810;
 }
 
-.logout-btn{
-    background:#b52b2b;
+.danger{
+    background:#b72c2c;
+    color:white;
+}
+
+.blue{
+    background:#2588d9;
     color:white;
 }
 
@@ -144,29 +195,54 @@ button{
     display:none;
 }
 
-#loginBox{
-    max-width:350px;
-    margin:25px auto;
-    padding:20px;
-    background:#0d3023;
-    border-radius:15px;
-    text-align:center;
-}
-
-#loginBox input{
+.admin-table{
     width:100%;
-    margin:7px 0;
+    overflow-x:auto;
 }
 
-.status{
+.admin-table table{
+    min-width:1800px;
+}
+
+.admin-table th{
+    font-size:13px;
+}
+
+.admin-table input{
+    width:90px;
+}
+
+.admin-table .name-input{
+    width:140px;
+}
+
+.duration{
+    color:#7dffbb;
+    font-weight:bold;
+    min-width:70px;
+}
+
+.admin-total{
+    color:#ffd700;
+    font-size:18px;
+    font-weight:bold;
+}
+
+.message{
     text-align:center;
-    margin:15px 0;
-    color:#8ff0bf;
+    margin:10px;
+    color:#7dffbb;
 }
 
 @media(max-width:600px){
-    header h1{font-size:22px}
-    .container{padding:10px 5px}
+
+    header h1{
+        font-size:22px;
+    }
+
+    .container{
+        padding:10px 5px;
+    }
 }
 </style>
 </head>
@@ -174,70 +250,184 @@ button{
 <body>
 
 <header>
+
     <h1>🐦 Gumti Pigeon Flying Tournament 🏆</h1>
-    <p>Live Pigeon Flying Tournament</p>
+
+    <p>
+        Live Pigeon Flying Tournament
+    </p>
+
 </header>
+
 
 <div class="container">
 
-<div class="status">
-    🟢 Tournament Live
+<div class="live">
+    🟢 LIVE TOURNAMENT
 </div>
 
-<div class="table-wrap">
+
+<!-- =========================
+     PUBLIC RESULT TABLE
+========================= -->
+
+<div class="table-box">
+
 <table>
+
 <thead>
+
 <tr>
-    <th>Player</th>
-    <th>Pigeon 1</th>
-    <th>Pigeon 2</th>
-    <th>Pigeon 3</th>
-    <th>Pigeon 4</th>
-    <th>Pigeon 5</th>
-    <th>Pigeon 6</th>
-    <th>Pigeon 7</th>
-    <th>Pigeon 8</th>
-    <th>Pigeon 9</th>
-    <th>Total Time</th>
+
+<th>Participant</th>
+
+<th>Pigeon 1</th>
+<th>Pigeon 2</th>
+<th>Pigeon 3</th>
+<th>Pigeon 4</th>
+<th>Pigeon 5</th>
+<th>Pigeon 6</th>
+<th>Pigeon 7</th>
+<th>Pigeon 8</th>
+<th>Pigeon 9</th>
+
+<th>🏆 Total Time</th>
+
 </tr>
+
 </thead>
 
-<tbody id="playersTable"></tbody>
+<tbody id="publicTable">
+
+</tbody>
+
 </table>
-</div>
 
-<!-- LOGIN -->
-<div id="loginBox">
-    <h2>🔐 Admin Login</h2>
-
-    <input
-        type="password"
-        id="adminPassword"
-        placeholder="Admin Password"
-    >
-
-    <button class="login-btn" onclick="login()">
-        Login
-    </button>
-
-    <p id="loginMessage"></p>
 </div>
 
 
-<!-- ADMIN PANEL -->
+
+<!-- =========================
+     ADMIN LOGIN
+========================= -->
+
+<div id="loginBox" class="login">
+
+<h2>🔐 Admin Login</h2>
+
+<input
+    type="password"
+    id="password"
+    placeholder="Admin Password"
+>
+
+<br>
+
+<button class="btn" onclick="login()">
+    Login
+</button>
+
+<p id="loginMessage"></p>
+
+</div>
+
+
+
+<!-- =========================
+     ADMIN PANEL
+========================= -->
+
 <div id="adminPanel" class="admin hidden">
 
-<h2>⚙️ Admin Panel</h2>
+<h2>⚙️ Tournament Admin Panel</h2>
 
-<div id="adminRows"></div>
-
-<button class="save-btn" onclick="saveData()">
-    💾 Save Changes
+<button class="btn" onclick="addPlayer()">
+    ➕ Add New Participant
 </button>
 
-<button class="logout-btn" onclick="logout()">
+<button class="blue" onclick="saveAll()">
+    💾 Save All Changes
+</button>
+
+<button class="danger" onclick="logout()">
     Logout
 </button>
+
+<p class="message" id="saveMessage"></p>
+
+
+<div class="admin-table">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Participant Name</th>
+
+<th colspan="3">🐦 Pigeon 1</th>
+<th colspan="3">🐦 Pigeon 2</th>
+<th colspan="3">🐦 Pigeon 3</th>
+<th colspan="3">🐦 Pigeon 4</th>
+<th colspan="3">🐦 Pigeon 5</th>
+<th colspan="3">🐦 Pigeon 6</th>
+<th colspan="3">🐦 Pigeon 7</th>
+<th colspan="3">🐦 Pigeon 8</th>
+<th colspan="3">🐦 Pigeon 9</th>
+
+<th>Total</th>
+
+<th>Delete</th>
+
+</tr>
+
+
+<tr>
+
+<th></th>
+
+<!-- PIGEON 1 -->
+<th>Start</th><th>End</th><th>Duration</th>
+
+<!-- PIGEON 2 -->
+<th>Start</th><th>End</th><th>Duration</th>
+
+<!-- PIGEON 3 -->
+<th>Start</th><th>End</th><th>Duration</th>
+
+<!-- PIGEON 4 -->
+<th>Start</th><th>End</th><th>Duration</th>
+
+<!-- PIGEON 5 -->
+<th>Start</th><th>End</th><th>Duration</th>
+
+<!-- PIGEON 6 -->
+<th>Start</th><th>End</th><th>Duration</th>
+
+<!-- PIGEON 7 -->
+<th>Start</th><th>End</th><th>Duration</th>
+
+<!-- PIGEON 8 -->
+<th>Start</th><th>End</th><th>Duration</th>
+
+<!-- PIGEON 9 -->
+<th>Start</th><th>End</th><th>Duration</th>
+
+<th></th>
+<th></th>
+
+</tr>
+
+</thead>
+
+<tbody id="adminTable">
+
+</tbody>
+
+</table>
+
+</div>
 
 </div>
 
@@ -246,329 +436,855 @@ button{
 
 <script>
 
-/* =========================
-   ADMIN PASSWORD
-   =========================
-   اپنی مرضی کا password یہاں لکھیں
+/*
+==================================================
+ADMIN PASSWORD
+==================================================
+
+اپنا password یہاں تبدیل کریں۔
+==================================================
 */
+
 const ADMIN_PASSWORD = "12345";
 
 
-/* =========================
-   DEFAULT PLAYERS
-   ========================= */
+/*
+==================================================
+TOURNAMENT DATA
+==================================================
 
-let players = [
-    {
-        name:"Mohsin",
-        times:[
-            "01:20",
-            "02:10",
-            "01:45",
-            "02:00",
-            "01:55",
-            "02:15",
-            "01:40",
-            "02:20",
-            "01:30"
-        ]
-    },
+شروع میں کوئی participant لازمی نہیں۔
 
-    {
-        name:"Khuram",
-        times:[
-            "01:10",
-            "02:05",
-            "01:50",
-            "02:10",
-            "01:45",
-            "02:00",
-            "01:35",
-            "02:15",
-            "01:25"
-        ]
-    },
+آپ Admin Panel سے خود جتنے چاہیں
+participants add کر سکتے ہیں۔
 
-    {
-        name:"Ranjha",
-        times:[
-            "01:30",
-            "02:20",
-            "01:55",
-            "02:15",
-            "02:00",
-            "02:10",
-            "01:50",
-            "02:25",
-            "01:40"
-        ]
+==================================================
+*/
+
+let players = [];
+
+
+/*
+==================================================
+FIREBASE
+
+اگر آپ کا Firebase پہلے سے connected ہے،
+تو اپنی existing Firebase initialization
+یہاں استعمال کریں۔
+
+مثال:
+
+const db = firebase.database();
+
+اگر آپ Firestore استعمال کر رہے ہیں
+تو اس حصے کو اپنے Firestore code کے
+ساتھ replace کرنا ہوگا۔
+==================================================
+*/
+
+
+/*
+==================================================
+TEMPORARY LOCAL STORAGE
+
+یہ fallback ہے تاکہ design فوراً کام کرے۔
+
+Firebase connect ہونے کے بعد loadData()
+اور saveAll() میں Firebase functions لگائیں۔
+==================================================
+*/
+
+function loadLocalData(){
+
+    const saved =
+        localStorage.getItem("gumtiPlayers");
+
+    if(saved){
+
+        players = JSON.parse(saved);
+
+    }else{
+
+        players = [];
+
     }
-];
 
-
-/* =========================
-   LOAD SAVED DATA
-   ========================= */
-
-const savedData = localStorage.getItem("gumtiTournament");
-
-if(savedData){
-    players = JSON.parse(savedData);
 }
 
 
-/* =========================
-   TIME CALCULATION
-   ========================= */
+/*
+==================================================
+SAVE LOCAL
+==================================================
+*/
 
-function timeToSeconds(time){
+function saveLocalData(){
 
-    if(!time || !time.includes(":")){
-        return 0;
+    localStorage.setItem(
+        "gumtiPlayers",
+        JSON.stringify(players)
+    );
+
+}
+
+
+/*
+==================================================
+TIME → MINUTES
+==================================================
+*/
+
+function timeToMinutes(time){
+
+    if(!time){
+        return null;
     }
 
     let parts = time.split(":");
 
-    let minutes = parseInt(parts[0]) || 0;
-    let seconds = parseInt(parts[1]) || 0;
+    if(parts.length !== 2){
+        return null;
+    }
 
-    return (minutes * 60) + seconds;
+    let hour = parseInt(parts[0]);
+
+    let minute = parseInt(parts[1]);
+
+    if(
+        isNaN(hour) ||
+        isNaN(minute) ||
+        hour < 0 ||
+        hour > 23 ||
+        minute < 0 ||
+        minute > 59
+    ){
+        return null;
+    }
+
+    return hour * 60 + minute;
+
 }
 
 
-function secondsToTime(seconds){
+/*
+==================================================
+DURATION CALCULATION
 
-    let minutes = Math.floor(seconds / 60);
+Example:
 
-    let secs = seconds % 60;
+06:00 → 14:30
 
-    return String(minutes).padStart(2,"0")
-        + ":" +
-        String(secs).padStart(2,"0");
+Result:
+
+08:30
+==================================================
+*/
+
+function calculateDuration(start,end){
+
+    let startMinutes =
+        timeToMinutes(start);
+
+    let endMinutes =
+        timeToMinutes(end);
+
+
+    if(
+        startMinutes === null ||
+        endMinutes === null
+    ){
+        return "00:00";
+    }
+
+
+    /*
+    اگر کبوتر رات 11:00 پر اڑا
+    اور اگلے دن 02:00 پر بیٹھا،
+    تو بھی صحیح duration آئے گا۔
+    */
+
+    if(endMinutes < startMinutes){
+
+        endMinutes += 24 * 60;
+
+    }
+
+
+    let duration =
+        endMinutes - startMinutes;
+
+
+    let hours =
+        Math.floor(duration / 60);
+
+    let minutes =
+        duration % 60;
+
+
+    return String(hours).padStart(2,"0")
+        + ":"
+        + String(minutes).padStart(2,"0");
+
 }
 
 
-function calculateTotal(times){
+/*
+==================================================
+TOTAL 9 PIGEONS
+==================================================
+*/
 
-    let total = 0;
+function calculateTotal(player){
 
-    times.forEach(time=>{
-        total += timeToSeconds(time);
-    });
+    let totalMinutes = 0;
 
-    return secondsToTime(total);
+
+    for(let i=0;i<9;i++){
+
+        let start =
+            player.pigeons[i]?.start || "";
+
+        let end =
+            player.pigeons[i]?.end || "";
+
+
+        let s =
+            timeToMinutes(start);
+
+        let e =
+            timeToMinutes(end);
+
+
+        if(
+            s !== null &&
+            e !== null
+        ){
+
+            if(e < s){
+                e += 1440;
+            }
+
+            totalMinutes += e - s;
+
+        }
+
+    }
+
+
+    let hours =
+        Math.floor(totalMinutes / 60);
+
+    let minutes =
+        totalMinutes % 60;
+
+
+    return String(hours).padStart(2,"0")
+        + ":"
+        + String(minutes).padStart(2,"0");
+
 }
 
 
-/* =========================
-   SHOW PUBLIC TABLE
-   ========================= */
+/*
+==================================================
+ADD PLAYER
+==================================================
+*/
 
-function renderTable(){
+function addPlayer(){
 
-    const table = document.getElementById("playersTable");
+    let newPlayer = {
 
-    table.innerHTML = "";
+        id:
+            Date.now(),
 
-    players.forEach(player=>{
+        name:
+            "New Participant",
 
-        let row = document.createElement("tr");
+        pigeons: []
 
-        let nameCell = document.createElement("td");
-
-        nameCell.className = "player-name";
-
-        nameCell.textContent = player.name;
-
-        row.appendChild(nameCell);
+    };
 
 
-        player.times.forEach(time=>{
+    for(let i=0;i<9;i++){
 
-            let cell = document.createElement("td");
+        newPlayer.pigeons.push({
 
-            cell.innerHTML = `
-                <div class="time-circle">
-                    ${time}
-                </div>
-            `;
-
-            row.appendChild(cell);
+            start:"",
+            end:""
 
         });
 
+    }
 
-        let totalCell = document.createElement("td");
 
-        totalCell.innerHTML = `
-            <div class="time-circle total-circle">
-                ${calculateTotal(player.times)}
+    players.push(newPlayer);
+
+
+    renderAdmin();
+
+    renderPublic();
+
+}
+
+
+/*
+==================================================
+DELETE PLAYER
+==================================================
+*/
+
+function deletePlayer(index){
+
+    if(
+        !confirm(
+            "کیا آپ اس participant کو delete کرنا چاہتے ہیں؟"
+        )
+    ){
+        return;
+    }
+
+
+    players.splice(index,1);
+
+
+    renderAdmin();
+
+    renderPublic();
+
+}
+
+
+/*
+==================================================
+UPDATE ONE FIELD
+==================================================
+*/
+
+function updateField(
+    playerIndex,
+    pigeonIndex,
+    type,
+    value
+){
+
+    players[playerIndex]
+        .pigeons[pigeonIndex][type] =
+        value;
+
+
+    updateAdminTotal(playerIndex);
+
+}
+
+
+/*
+==================================================
+UPDATE ADMIN TOTAL
+==================================================
+*/
+
+function updateAdminTotal(index){
+
+    let total =
+        calculateTotal(players[index]);
+
+
+    let element =
+        document.getElementById(
+            "admin-total-" + index
+        );
+
+
+    if(element){
+
+        element.innerText =
+            total;
+
+    }
+
+
+    /*
+    ہر duration بھی update کریں
+    */
+
+    for(let i=0;i<9;i++){
+
+        let start =
+            players[index]
+                .pigeons[i].start;
+
+        let end =
+            players[index]
+                .pigeons[i].end;
+
+
+        let duration =
+            calculateDuration(
+                start,
+                end
+            );
+
+
+        let el =
+            document.getElementById(
+                `duration-${index}-${i}`
+            );
+
+
+        if(el){
+
+            el.innerText =
+                duration;
+
+        }
+
+    }
+
+}
+
+
+/*
+==================================================
+RENDER PUBLIC TABLE
+==================================================
+*/
+
+function renderPublic(){
+
+    const table =
+        document.getElementById(
+            "publicTable"
+        );
+
+
+    table.innerHTML = "";
+
+
+    players.forEach(player=>{
+
+        let row =
+            document.createElement("tr");
+
+
+        let name =
+            document.createElement("td");
+
+
+        name.className =
+            "player";
+
+
+        name.innerText =
+            player.name;
+
+
+        row.appendChild(name);
+
+
+        player.pigeons.forEach(
+            pigeon=>{
+
+                let cell =
+                    document.createElement("td");
+
+
+                let duration =
+                    calculateDuration(
+                        pigeon.start,
+                        pigeon.end
+                    );
+
+
+                cell.innerHTML = `
+
+                    <div class="pigeon-box">
+
+                        <div class="circle">
+
+                            <strong>
+                                ${duration}
+                            </strong>
+
+                            <small>
+                                Duration
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                `;
+
+
+                row.appendChild(cell);
+
+            }
+        );
+
+
+        let total =
+            document.createElement("td");
+
+
+        total.innerHTML = `
+
+            <div class="circle total">
+
+                <strong>
+                    ${calculateTotal(player)}
+                </strong>
+
+                <small>
+                    Total Time
+                </small>
+
             </div>
+
         `;
 
-        row.appendChild(totalCell);
+
+        row.appendChild(total);
+
 
         table.appendChild(row);
 
     });
+
 }
 
 
-/* =========================
-   ADMIN PANEL
-   ========================= */
+/*
+==================================================
+RENDER ADMIN TABLE
+==================================================
+*/
 
 function renderAdmin(){
 
-    const adminRows = document.getElementById("adminRows");
+    const table =
+        document.getElementById(
+            "adminTable"
+        );
 
-    adminRows.innerHTML = "";
 
-    players.forEach((player,index)=>{
+    table.innerHTML = "";
 
-        let box = document.createElement("div");
 
-        box.style.marginBottom = "25px";
-        box.style.padding = "15px";
-        box.style.background = "#092219";
-        box.style.borderRadius = "10px";
+    players.forEach(
+        (player,index)=>{
 
-        let html = `
-            <h3 style="color:#ffd700">
-                Player ${index+1}
-            </h3>
+        let row =
+            document.createElement("tr");
+
+
+        /*
+        NAME
+        */
+
+        let nameCell =
+            document.createElement("td");
+
+
+        nameCell.innerHTML = `
 
             <input
                 class="name-input"
-                id="name-${index}"
-                value="${player.name}"
-                placeholder="Player Name"
+                value="${escapeHtml(player.name)}"
+                onchange="
+                    players[${index}].name=this.value;
+                    renderPublic();
+                "
             >
-            <br><br>
+
         `;
 
-        player.times.forEach((time,pigeonIndex)=>{
 
-            html += `
-                <label>
-                    Pigeon ${pigeonIndex+1}:
-                </label>
+        row.appendChild(nameCell);
+
+
+        /*
+        9 PIGEONS
+        */
+
+        for(let i=0;i<9;i++){
+
+            let pigeon =
+                player.pigeons[i];
+
+
+            /*
+            START
+            */
+
+            let startCell =
+                document.createElement("td");
+
+
+            startCell.innerHTML = `
 
                 <input
-                    id="time-${index}-${pigeonIndex}"
-                    value="${time}"
-                    placeholder="MM:SS"
+                    type="time"
+                    value="${pigeon.start}"
+                    onchange="
+                        updateField(
+                            ${index},
+                            ${i},
+                            'start',
+                            this.value
+                        )
+                    "
                 >
+
             `;
 
-        });
 
-        html += `
-            <p style="color:#8ff0bf">
-                Total:
-                <strong id="admin-total-${index}">
-                    ${calculateTotal(player.times)}
-                </strong>
-            </p>
+            row.appendChild(startCell);
+
+
+            /*
+            END
+            */
+
+            let endCell =
+                document.createElement("td");
+
+
+            endCell.innerHTML = `
+
+                <input
+                    type="time"
+                    value="${pigeon.end}"
+                    onchange="
+                        updateField(
+                            ${index},
+                            ${i},
+                            'end',
+                            this.value
+                        )
+                    "
+                >
+
+            `;
+
+
+            row.appendChild(endCell);
+
+
+            /*
+            DURATION
+            */
+
+            let durationCell =
+                document.createElement("td");
+
+
+            durationCell.innerHTML = `
+
+                <span
+                    class="duration"
+                    id="duration-${index}-${i}"
+                >
+                    ${calculateDuration(
+                        pigeon.start,
+                        pigeon.end
+                    )}
+                </span>
+
+            `;
+
+
+            row.appendChild(durationCell);
+
+        }
+
+
+        /*
+        TOTAL
+        */
+
+        let totalCell =
+            document.createElement("td");
+
+
+        totalCell.innerHTML = `
+
+            <span
+                class="admin-total"
+                id="admin-total-${index}"
+            >
+                ${calculateTotal(player)}
+            </span>
+
         `;
 
-        box.innerHTML = html;
 
-        adminRows.appendChild(box);
+        row.appendChild(totalCell);
+
+
+        /*
+        DELETE
+        */
+
+        let deleteCell =
+            document.createElement("td");
+
+
+        deleteCell.innerHTML = `
+
+            <button
+                class="danger"
+                onclick="deletePlayer(${index})"
+            >
+                Delete
+            </button>
+
+        `;
+
+
+        row.appendChild(deleteCell);
+
+
+        table.appendChild(row);
 
     });
 
 }
 
 
-/* =========================
-   LOGIN
-   ========================= */
+/*
+==================================================
+ESCAPE HTML
+==================================================
+*/
+
+function escapeHtml(text){
+
+    return String(text)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
+/*
+==================================================
+SAVE ALL
+==================================================
+*/
+
+function saveAll(){
+
+    /*
+    ابھی local backup
+    */
+
+    saveLocalData();
+
+
+    renderPublic();
+
+
+    document.getElementById(
+        "saveMessage"
+    ).innerText =
+        "✅ Changes Saved Successfully";
+
+
+    /*
+    Firebase یہاں connect ہوگا۔
+    */
+
+
+    setTimeout(()=>{
+
+        document.getElementById(
+            "saveMessage"
+        ).innerText = "";
+
+    },3000);
+
+}
+
+
+/*
+==================================================
+LOGIN
+==================================================
+*/
 
 function login(){
 
     let password =
-        document.getElementById("adminPassword").value;
+        document.getElementById(
+            "password"
+        ).value;
+
 
     if(password === ADMIN_PASSWORD){
 
-        document.getElementById("loginBox")
-            .classList.add("hidden");
+        document.getElementById(
+            "loginBox"
+        ).classList.add("hidden");
 
-        document.getElementById("adminPanel")
-            .classList.remove("hidden");
+
+        document.getElementById(
+            "adminPanel"
+        ).classList.remove("hidden");
+
 
         renderAdmin();
 
+
     }else{
 
-        document.getElementById("loginMessage")
-            .textContent = "❌ Wrong Password";
+        document.getElementById(
+            "loginMessage"
+        ).innerText =
+            "❌ Wrong Password";
 
     }
-}
-
-
-/* =========================
-   SAVE DATA
-   ========================= */
-
-function saveData(){
-
-    players.forEach((player,index)=>{
-
-        player.name =
-            document.getElementById(`name-${index}`).value;
-
-        player.times =
-            player.times.map((time,pigeonIndex)=>{
-
-                return document.getElementById(
-                    `time-${index}-${pigeonIndex}`
-                ).value;
-
-            });
-
-    });
-
-
-    localStorage.setItem(
-        "gumtiTournament",
-        JSON.stringify(players)
-    );
-
-
-    renderTable();
-
-    renderAdmin();
-
-    alert("✅ Changes Saved Successfully!");
 
 }
 
 
-/* =========================
-   LOGOUT
-   ========================= */
+/*
+==================================================
+LOGOUT
+==================================================
+*/
 
 function logout(){
 
-    document.getElementById("adminPanel")
-        .classList.add("hidden");
+    document.getElementById(
+        "adminPanel"
+    ).classList.add("hidden");
 
-    document.getElementById("loginBox")
-        .classList.remove("hidden");
 
-    document.getElementById("adminPassword").value = "";
+    document.getElementById(
+        "loginBox"
+    ).classList.remove("hidden");
+
+
+    document.getElementById(
+        "password"
+    ).value = "";
 
 }
 
 
-/* =========================
-   START
-   ========================= */
+/*
+==================================================
+START
+==================================================
+*/
 
-renderTable();
+loadLocalData();
+
+renderPublic();
 
 </script>
 
