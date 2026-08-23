@@ -7,13 +7,13 @@
   <style>
     body { font-family: Arial, sans-serif; background-color: #f4f6f9; text-align: center; margin: 20px; }
     h2 { margin-bottom: 20px; }
-    .form-card { background: #ffffff; max-width: 450px; margin: 0 auto 30px auto; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-    .form-card input { width: 90%; padding: 10px; margin: 8px 0; border: 1px solid #ccc; border-radius: 5px; text-align: center; font-size: 14px; }
-    .form-card button { width: 95%; padding: 12px; background-color: #002b5b; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 16px; }
-    table { width: 100%; border-collapse: collapse; margin-top: 20px; background: #fff; }
+    .form-card { background: #ffffff; max-width: 450px; margin: 0 auto 20px auto; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    .form-card input { width: 90%; padding: 10px; margin: 8px 0; border: 1px solid #ccc; border-radius: 4px; text-align: center; }
+    .form-card button { width: 95%; padding: 12px; background-color: #002b5b; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; background: #fff; display: block; overflow-x: auto; white-space: nowrap; }
     th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
     th { background-color: #002b5b; color: white; }
-    .time-badge { border: 1px solid #002b5b; border-radius: 50%; padding: 4px 8px; display: inline-block; color: #002b5b; font-weight: bold; }
+    .time-badge { border: 1px solid #002b5b; border-radius: 5px; padding: 2px 6px; color: #002b5b; font-weight: bold; }
   </style>
 </head>
 <body>
@@ -22,8 +22,8 @@
 
   <div class="form-card">
     <h3>📝 نئی اینٹری / وقت اپڈیٹ کریں</h3>
-    <input type="text" id="ownerName" placeholder="مالک کا نام (مثلاً Ali)">
-    <input type="text" id="pigeonTimes" placeholder="اوقات کوما سے الگ کریں (مثلاً 11.35,12.50,13.10)">
+    <input type="text" id="ownerName" placeholder="(مثلاً Ali) مالک کا نام">
+    <input type="text" id="pigeonTimes" placeholder="اوقات کوما سے الگ کریں (مثلاً 11.35,12.50,01.30)">
     <button onclick="saveData()">💾 جدول میں شامل کریں</button>
   </div>
 
@@ -37,81 +37,63 @@
         <th>Pigeon 3</th>
         <th>Pigeon 4</th>
         <th>Pigeon 5</th>
+        <th>Pigeon 6</th>
+        <th>Pigeon 7</th>
+        <th>Pigeon 8</th>
+        <th>Pigeon 9</th>
       </tr>
     </thead>
     <tbody id="tableBody">
-      <!-- لائیو ڈیٹا یہاں خود بخود آئے گا -->
     </tbody>
   </table>
 
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-
   <script>
-    // آپ کی اپنی Firebase Config کیز
-    const firebaseConfig = {
-      apiKey: "AIzaSyBmHOJF-cRDr2DnM2giryDUlMbu",
-      authDomain: "gumti-pigeon.firebaseapp.com",
-      databaseURL: "https://gumti-pigeon-default-rtdb.firebaseio.com",
-      projectId: "gumti-pigeon",
-      storageBucket: "gumti-pigeon.appspot.com",
-      messagingSenderId: "976301963421",
-      appId: "1:976301963421:web:ebec5105e7d774b20c3c74",
-      measurementId: "G-3M61X5Y8CR"
-    };
+    let tournamentData = JSON.parse(localStorage.getItem('pigeonData')) || [];
 
-    // Firebase Init
-    firebase.initializeApp(firebaseConfig);
-    const database = firebase.database();
+    function renderTable() {
+      const tbody = document.getElementById('tableBody');
+      tbody.innerHTML = '';
+      tournamentData.forEach((entry, index) => {
+        let row = `<tr>
+          <td>${index + 1}</td>
+          <td><b>${entry.name}</b></td>`;
+        
+        for (let i = 0; i < 9; i++) {
+          let time = entry.times[i] ? `<span class="time-badge">${entry.times[i]}</span>` : '-';
+          row += `<td>${time}</td>`;
+        }
+        
+        row += `</tr>`;
+        tbody.innerHTML += row;
+      });
+    }
 
-    // 1. ڈیٹا سیو کرنے کا فنکشن
     function saveData() {
       const name = document.getElementById('ownerName').value.trim();
       const timesInput = document.getElementById('pigeonTimes').value.trim();
 
-      if(!name || !timesInput) {
-        alert('براہ کرم نام اور اوقات دونوں درج کریں۔');
+      if (!name) {
+        alert('براہ کرم مالک کا نام درج کریں!');
         return;
       }
 
-      const timesArray = timesInput.split(',').map(t => t.trim());
+      const times = timesInput ? timesInput.split(',').map(t => t.trim()) : [];
 
-      database.ref('entries/' + name).set({
-        name: name,
-        times: timesArray
-      }).then(() => {
-        document.getElementById('ownerName').value = '';
-        document.getElementById('pigeonTimes').value = '';
-        alert('ڈیٹا لائیو اپڈیٹ ہو گیا ہے!');
-      }).catch(error => {
-        alert('مسئلہ آیا: ' + error.message);
-      });
+      let existingEntry = tournamentData.find(e => e.name.toLowerCase() === name.toLowerCase());
+      if (existingEntry) {
+        existingEntry.times = times;
+      } else {
+        tournamentData.push({ name: name, times: times });
+      }
+
+      localStorage.setItem('pigeonData', JSON.stringify(tournamentData));
+      document.getElementById('ownerName').value = '';
+      document.getElementById('pigeonTimes').value = '';
+      renderTable();
     }
 
-    // 2. سب کے پاس لائیو ریئل ٹائم اپڈیٹ
-    database.ref('entries').on('value', (snapshot) => {
-      const tableBody = document.getElementById('tableBody');
-      tableBody.innerHTML = '';
-      let index = 1;
-
-      snapshot.forEach((childSnapshot) => {
-        const item = childSnapshot.val();
-        let row = `<tr>
-          <td>${index++}</td>
-          <td><b>${item.name}</b></td>`;
-
-        for(let i = 0; i < 5; i++) {
-          if(item.times && item.times[i]) {
-            row += `<td><span class="time-badge">${item.times[i]}</span></td>`;
-          } else {
-            row += `<td>-</td>`;
-          }
-        }
-        row += `</tr>`;
-        tableBody.innerHTML += row;
-      });
-    });
+    renderTable();
   </script>
+
 </body>
 </html>
