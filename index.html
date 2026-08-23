@@ -1,275 +1,266 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="ur" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gumti Pigeon Flying Tournament</title>
+
   <style>
-    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
-    body { background-color: #f8f9fa; margin: 0; padding: 20px 10px; text-align: center; }
-    
-    .main-title { color: #112233; font-size: 26px; font-weight: bold; margin-bottom: 20px; }
-    
-    .btn-admin-login {
-      background-color: #4cae4c;
-      color: white;
-      border: none;
-      padding: 10px 24px;
-      font-size: 16px;
-      font-weight: bold;
-      border-radius: 6px;
-      cursor: pointer;
-      margin-bottom: 20px;
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
-    /* Admin Entry Form */
-    .admin-card {
-      display: none;
-      background: white;
+    body {
+      font-family: Arial, "Noto Nastaliq Urdu", sans-serif;
+      background: linear-gradient(135deg, #071e16, #0d3b2a, #06251b);
+      color: white;
+      min-height: 100vh;
+      padding: 20px 12px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: auto;
+    }
+
+    .header {
+      text-align: center;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 25px;
+      padding: 25px 15px;
+      margin-bottom: 25px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .header h1 {
+      font-size: 32px;
+      color: #ffd700;
+      margin-bottom: 8px;
+    }
+
+    .header h2 {
+      font-size: 22px;
+      margin-bottom: 8px;
+    }
+
+    .header p {
+      color: #d8eee5;
+      font-size: 15px;
+    }
+
+    .player {
+      background: rgba(255,255,255,0.09);
+      border: 1px solid rgba(255,215,0,0.3);
+      border-radius: 25px;
+      padding: 25px 15px;
+      margin-bottom: 25px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    }
+
+    .player-name {
+      text-align: center;
+      font-size: 28px;
+      color: #ffd700;
+      margin-bottom: 25px;
+      font-weight: bold;
+    }
+
+    .pigeons {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+      justify-items: center;
+    }
+
+    .pigeon {
+      width: 155px;
+      height: 155px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #164d38, #09281e);
+      border: 4px solid #ffd700;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 0 25px rgba(255,215,0,0.18);
+      transition: 0.3s;
+    }
+
+    .pigeon:hover {
+      transform: translateY(-6px) scale(1.03);
+      box-shadow: 0 0 35px rgba(255,215,0,0.35);
+    }
+
+    .number {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #ffd700;
+      color: #06251b;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+
+    .label {
+      font-size: 15px;
+      color: #cfe9df;
+      margin-bottom: 5px;
+    }
+
+    .time {
+      font-size: 24px;
+      font-weight: bold;
+      color: white;
+      direction: ltr;
+    }
+
+    .footer {
+      text-align: center;
       padding: 20px;
-      border-radius: 12px;
-      max-width: 500px;
-      margin: 0 auto 25px auto;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      border: 1px solid #e2e8f0;
-      text-align: right;
-    }
-    .admin-card h3 { margin-top: 0; text-align: center; color: #0b1f3a; margin-bottom: 15px; }
-    .form-group { margin-bottom: 12px; }
-    .form-group label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 14px; }
-    .form-group input { width: 100%; padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; }
-    
-    .pigeon-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 15px; }
-    .pigeon-box { text-align: center; }
-    .pigeon-box label { display: block; font-size: 12px; font-weight: bold; margin-bottom: 3px; }
-    .pigeon-box input { width: 100%; text-align: center; padding: 6px; border: 1px solid #ccc; border-radius: 6px; }
-
-    .btn-save { background-color: #0b1f3a; color: white; border: none; padding: 10px; width: 100%; border-radius: 6px; font-weight: bold; font-size: 15px; cursor: pointer; }
-
-    /* Exact Design matching Screenshot */
-    .table-container { width: 100%; overflow-x: auto; background: white; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-    table { width: 100%; border-collapse: collapse; min-width: 900px; }
-    
-    th {
-      background-color: #0b2545;
-      color: white;
-      padding: 12px 8px;
+      color: #cfe9df;
       font-size: 14px;
-      font-weight: bold;
-      border: 1px solid #0b2545;
-      text-align: center;
-      white-space: nowrap;
-    }
-    
-    td {
-      border: 1px solid #e9ecef;
-      padding: 10px 6px;
-      text-align: center;
-      vertical-align: middle;
-      font-size: 14px;
-      color: #333;
     }
 
-    /* Rounded Rectangular Badges as shown in Image */
-    .time-badge {
-      display: inline-block;
-      border: 1.5px solid #0b2545;
-      border-radius: 8px;
-      padding: 3px 10px;
-      font-weight: bold;
-      color: #0b2545;
-      font-size: 13px;
-      min-width: 45px;
+    @media (max-width: 600px) {
+      body {
+        padding: 12px 8px;
+      }
+
+      .header h1 {
+        font-size: 25px;
+      }
+
+      .header h2 {
+        font-size: 19px;
+      }
+
+      .player-name {
+        font-size: 24px;
+      }
+
+      .pigeons {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+      }
+
+      .pigeon {
+        width: 135px;
+        height: 135px;
+      }
+
+      .time {
+        font-size: 20px;
+      }
     }
 
-    .total-badge {
-      border-color: #2e7d32;
-      color: #2e7d32;
-      background-color: #f1f8e9;
-    }
+    @media (max-width: 350px) {
+      .pigeon {
+        width: 120px;
+        height: 120px;
+      }
 
-    .btn-del { background-color: #d9534f; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 12px; }
-    .admin-col { display: none; }
+      .time {
+        font-size: 18px;
+      }
+    }
   </style>
 </head>
+
 <body>
 
-  <div class="main-title">گمٹی پیجن فلائنگ ٹورنامنٹ 🏆</div>
+  <div class="container">
 
-  <button id="adminBtn" class="btn-admin-login" onclick="handleAuth()">Admin Login 🔐</button>
-
-  <!-- Admin Input Card -->
-  <div id="adminCard" class="admin-card">
-    <h3>📝 اینٹری ڈیش بورڈ</h3>
-    <div class="form-group">
-      <label>Name:</label>
-      <input type="text" id="pName" placeholder="مثال: Ali">
-    </div>
-    
-    <div class="pigeon-grid">
-      <div class="pigeon-box"><label>Pigeon 1</label><input type="text" id="p1" placeholder="12.50"></div>
-      <div class="pigeon-box"><label>Pigeon 2</label><input type="text" id="p2" placeholder="01.15"></div>
-      <div class="pigeon-box"><label>Pigeon 3</label><input type="text" id="p3" placeholder="02.25"></div>
-      <div class="pigeon-box"><label>Pigeon 4</label><input type="text" id="p4"></div>
-      <div class="pigeon-box"><label>Pigeon 5</label><input type="text" id="p5"></div>
-      <div class="pigeon-box"><label>Pigeon 6</label><input type="text" id="p6"></div>
-      <div class="pigeon-box"><label>Pigeon 7</label><input type="text" id="p7"></div>
-      <div class="pigeon-box"><label>Pigeon 8</label><input type="text" id="p8"></div>
-      <div class="pigeon-box"><label>Pigeon 9</label><input type="text" id="p9"></div>
+    <div class="header">
+      <h1>🐦 Gumti Pigeon Flying Tournament 🏆</h1>
+      <h2>کبوتروں کی فلائنگ ٹورنامنٹ</h2>
+      <p>9 کبوتروں کا فلائنگ ٹائم</p>
     </div>
 
-    <button class="btn-save" onclick="saveData()">💾 محفوظ کریں</button>
+    <div class="player">
+
+      <!-- یہاں نام تبدیل کریں -->
+      <div class="player-name">علی</div>
+
+      <div class="pigeons">
+
+        <!-- کبوتر 1 -->
+        <div class="pigeon">
+          <div class="number">1</div>
+          <div class="label">کبوتر نمبر</div>
+          <div class="time">12:30</div>
+        </div>
+
+        <!-- کبوتر 2 -->
+        <div class="pigeon">
+          <div class="number">2</div>
+          <div class="label">کبوتر نمبر</div>
+          <div class="time">12:45</div>
+        </div>
+
+        <!-- کبوتر 3 -->
+        <div class="pigeon">
+          <div class="number">3</div>
+          <div class="label">کبوتر نمبر</div>
+          <div class="time">01:00</div>
+        </div>
+
+        <!-- کبوتر 4 -->
+        <div class="pigeon">
+          <div class="number">4</div>
+          <div class="label">کبوتر نمبر</div>
+          <div class="time">01:15</div>
+        </div>
+
+        <!-- کبوتر 5 -->
+        <div class="pigeon">
+          <div class="number">5</div>
+          <div class="label">کبوتر نمبر</div>
+          <div class="time">01:30</div>
+        </div>
+
+        <!-- کبوتر 6 -->
+        <div class="pigeon">
+          <div class="number">6</div>
+          <div class="label">کبوتر نمبر</div>
+          <div class="time">01:45</div>
+        </div>
+
+        <!-- کبوتر 7 -->
+        <div class="pigeon">
+          <div class="number">7</div>
+          <div class="label">کبوتر نمبر</div>
+          <div class="time">02:00</div>
+        </div>
+
+        <!-- کبوتر 8 -->
+        <div class="pigeon">
+          <div class="number">8</div>
+          <div class="label">کبوتر نمبر</div>
+          <div class="time">02:15</div>
+        </div>
+
+        <!-- کبوتر 9 -->
+        <div class="pigeon">
+          <div class="number">9</div>
+          <div class="label">کبوتر نمبر</div>
+          <div class="time">02:30</div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="footer">
+      © 2026 Gumti Pigeon Flying Tournament
+    </div>
+
   </div>
-
-  <!-- Main Table -->
-  <div class="table-container">
-    <table>
-      <thead>
-        <tr>
-          <th style="width: 40px;">#</th>
-          <th>Name</th>
-          <th>Pigeon 1</th>
-          <th>Pigeon 2</th>
-          <th>Pigeon 3</th>
-          <th>Pigeon 4</th>
-          <th>Pigeon 5</th>
-          <th>Pigeon 6</th>
-          <th>Pigeon 7</th>
-          <th>Pigeon 8</th>
-          <th>Pigeon 9</th>
-          <th>Total Time</th>
-          <th class="admin-col">Action</th>
-        </tr>
-      </thead>
-      <tbody id="tableBody">
-      </tbody>
-    </table>
-  </div>
-
-  <script>
-    const ADMIN_PASS = "1234"; // 🔑 پاسورڈ
-    let isAdmin = false;
-    let localData = JSON.parse(localStorage.getItem('pigeonMatchDataStore')) || {};
-
-    function handleAuth() {
-      if (isAdmin) {
-        isAdmin = false;
-        updateView();
-      } else {
-        let pass = prompt("Enter Admin Password:");
-        if (pass === ADMIN_PASS) {
-          isAdmin = true;
-          updateView();
-        } else if (pass !== null) {
-          alert("Incorrect Password!");
-        }
-      }
-    }
-
-    function updateView() {
-      let card = document.getElementById('adminCard');
-      let btn = document.getElementById('adminBtn');
-      let adminCols = document.querySelectorAll('.admin-col');
-
-      if (isAdmin) {
-        card.style.display = 'block';
-        btn.innerText = "Logout 🔓";
-        btn.style.backgroundColor = "#707a8a";
-        adminCols.forEach(el => el.style.display = 'table-cell');
-      } else {
-        card.style.display = 'none';
-        btn.innerText = "Admin Login 🔐";
-        btn.style.backgroundColor = "#4cae4c";
-        adminCols.forEach(el => el.style.display = 'none');
-      }
-      renderTable();
-    }
-
-    // Calculate total flying hours from 06:00 AM
-    function getFlyMinutes(timeStr) {
-      if (!timeStr || timeStr === '-') return 0;
-      let clean = timeStr.toString().replace('.', ':');
-      let parts = clean.split(':');
-      let hrs = parseInt(parts[0]) || 0;
-      let mins = parseInt(parts[1]) || 0;
-
-      if (hrs < 6) hrs += 12;
-
-      let totalMins = ((hrs - 6) * 60) + mins;
-      return totalMins > 0 ? totalMins : 0;
-    }
-
-    function formatTime(totalMins) {
-      if (totalMins <= 0) return "-";
-      let h = Math.floor(totalMins / 60);
-      let m = totalMins % 60;
-      return `${h}.${m < 10 ? '0' : ''}${m}`;
-    }
-
-    function saveData() {
-      let name = document.getElementById('pName').value.trim();
-      if (!name) { alert("نام درج کریں!"); return; }
-
-      if (!localData[name]) localData[name] = Array(9).fill('-');
-
-      for (let i = 1; i <= 9; i++) {
-        let val = document.getElementById(`p${i}`).value.trim();
-        if (val !== "") localData[name][i - 1] = val;
-      }
-
-      localStorage.setItem('pigeonMatchDataStore', JSON.stringify(localData));
-      renderTable();
-
-      // Clear Form
-      document.getElementById('pName').value = '';
-      for (let i = 1; i <= 9; i++) document.getElementById(`p${i}`).value = '';
-    }
-
-    function renderTable() {
-      let tbody = document.getElementById('tableBody');
-      tbody.innerHTML = '';
-      let index = 1;
-
-      for (let name in localData) {
-        let row = document.createElement('tr');
-        let times = localData[name];
-        let totalMins = 0;
-        let cellsHtml = '';
-
-        for (let i = 0; i < 9; i++) {
-          let t = times[i] || '-';
-          if (t !== '-') totalMins += getFlyMinutes(t);
-          
-          let displayBox = t !== '-' ? `<span class="time-badge">${t}</span>` : '-';
-          cellsHtml += `<td>${displayBox}</td>`;
-        }
-
-        let formattedTotal = formatTime(totalMins);
-        let totalDisplay = formattedTotal !== '-' ? `<span class="time-badge total-badge">${formattedTotal}</span>` : '-';
-        let actionTd = isAdmin ? `<td class="admin-col"><button class="btn-del" onclick="deleteRow('${name}')">حذف</button></td>` : '';
-
-        row.innerHTML = `
-          <td><b>${index++}</b></td>
-          <td><b>${name}</b></td>
-          ${cellsHtml}
-          <td>${totalDisplay}</td>
-          ${actionTd}
-        `;
-
-        tbody.appendChild(row);
-      }
-    }
-
-    function deleteRow(name) {
-      if (confirm(`کیا آپ ${name} کی اینٹری ختم کرنا چاہتے ہیں؟`)) {
-        delete localData[name];
-        localStorage.setItem('pigeonMatchDataStore', JSON.stringify(localData));
-        renderTable();
-      }
-    }
-
-    renderTable();
-  </script>
 
 </body>
 </html>
