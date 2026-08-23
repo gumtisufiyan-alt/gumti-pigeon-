@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gumti Pigeon Tournament</title>
+  <style>
+    * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; padding: 0; }
+    body { background-color: #f0f4f8; color: #333; direction: rtl; }
+    
+    /* Header Section */
+    .header { background: linear-gradient(135deg, #0052d4, #4364f7, #6fb1fc); color: white; text-align: center; padding: 25px 15px; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; }
+    .header h1 { font-size: 24px; margin-bottom: 8px; }
+    .header p { font-size: 14px; opacity: 0.9; }
+
+    /* Container & Cards Grid */
+    .container { max-width: 500px; margin: 0 auto; padding: 15px; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+    .card { background: white; padding: 15px; border-radius: 12px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+    .card-title { font-size: 12px; color: #666; margin-bottom: 5px; }
+    .card-value { font-size: 18px; font-weight: bold; color: #0052d4; }
+    .card-value.green { color: #2e7d32; }
+
+    /* Full Width Status Bars */
+    .status-bar { background: white; padding: 12px 20px; border-radius: 10px; margin-bottom: 10px; text-align: center; font-weight: 500; box-shadow: 0 2px 5px rgba(0,0,0,0.03); }
+    .info-box { padding: 15px; border-radius: 10px; margin-bottom: 10px; text-align: center; }
+    .info-box.latest { background-color: #e3f2fd; }
+    .info-box.first { background-color: #e8f5e9; }
+    .info-box.last { background-color: #fff8e1; }
+
+    /* Admin Panel Form */
+    .admin-card { background: white; padding: 20px; border-radius: 15px; margin-top: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); text-align: center; }
+    .admin-card h2 { font-size: 20px; margin-bottom: 15px; }
+    .form-group { margin-bottom: 12px; }
+    .form-group input { width: 100%; padding: 10px 15px; border: 1px solid #ddd; border-radius: 8px; text-align: right; font-size: 14px; }
+    .btn { width: 100%; padding: 12px; background-color: #0052d4; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 15px; }
+    .btn:hover { background-color: #003b99; }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <div style="font-size: 30px;">🕊️ 🏆 🕊️</div>
+    <h1>گمثی پیجن فلائنگ ٹورنامنٹ</h1>
+    <p>گمثی شریف — 11 ستمبر 2026 — صبح 6:30 بجے</p>
+  </div>
+
+  <div class="container">
+    <!-- Grid Info -->
+    <div class="grid">
+      <div class="card">
+        <div class="card-title">کل کبوتر</div>
+        <div class="card-value" style="color: #f57c00;" id="totalPigeons">11</div>
+      </div>
+      <div class="card">
+        <div class="card-title">مقام</div>
+        <div class="card-value" style="font-size: 15px;">گمثی شریف</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Start Time</div>
+        <div class="card-value green">AM 06:30</div>
+      </div>
+      <div class="card">
+        <div class="card-title">تاریخ</div>
+        <div class="card-value">11/09/2026</div>
+      </div>
+    </div>
+
+    <!-- Live Status -->
+    <div class="status-bar">🕊️ اڑائے گئے: <span id="flyCount">11</span></div>
+    <div class="status-bar">🕊️ بیٹھنے والے: <span id="satCount">0</span></div>
+    <div class="status-bar">🕊️ باقی: <span id="remainingCount">11</span></div>
+
+    <!-- Info Boxes -->
+    <div class="info-box latest">
+      <strong>🔔 تازہ ترین اپڈیٹ</strong>
+      <p id="latestUpdate" style="font-size: 13px; margin-top: 5px;">ابھی کوئی نیا رزلٹ نہیں</p>
+    </div>
+
+    <div class="info-box first">
+      <strong>🥇 پہلا آنے والا</strong>
+      <p id="firstPlace" style="font-size: 13px; margin-top: 5px;">ابھی ریکارڈ نہیں</p>
+    </div>
+
+    <div class="info-box last">
+      <strong>🏁 آخری آنے والا</strong>
+      <p id="lastPlace" style="font-size: 13px; margin-top: 5px;">ابھی ریکارڈ نہیں</p>
+    </div>
+
+    <!-- Admin Panel Form -->
+    <div class="admin-card">
+      <h2>گمثی Admin Panel 🕊️</h2>
+      <p style="font-size: 12px; color: #666; margin-bottom: 15px;">مالک، کبوتر نمبر اور بیٹھنے کا وقت درج کریں۔</p>
+      
+      <div class="form-group">
+        <input type="text" id="ownerName" placeholder="مالک کا نام">
+      </div>
+      <div class="form-group">
+        <input type="number" id="pigeonNumber" placeholder="کبوتر نمبر 1 تا 11">
+      </div>
+      <div class="form-group">
+        <input type="text" id="landTime" placeholder="وقت مثلاً 03:45">
+      </div>
+      
+      <button class="btn" onclick="updateResult()">💾 رزلٹ اپڈیٹ کریں</button>
+    </div>
+  </div>
+
+  <!-- Firebase Integration -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBmHOJF-cRDr2DnM2giryDUlMbu...",
+      authDomain: "gumti-pigeon.firebaseapp.com",
+      databaseURL: "https://gumti-pigeon-default-rtdb.firebaseio.com",
+      projectId: "gumti-pigeon",
+      storageBucket: "gumti-pigeon.firebasestorage.app",
+      messagingSenderId: "976301963421",
+      appId: "1:976301963421:web:ebec5105e7d774b20c3c74"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    const tournamentRef = ref(db, 'tournament/');
+    onValue(tournamentRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        document.getElementById('satCount').innerText = data.satCount || 0;
+        document.getElementById('remainingCount').innerText = 11 - (data.satCount || 0);
+        document.getElementById('latestUpdate').innerText = data.latestUpdate || "ابھی کوئی نیا رزلٹ نہیں";
+        document.getElementById('firstPlace').innerText = data.firstPlace || "ابھی ریکارڈ نہیں";
+        document.getElementById('lastPlace').innerText = data.lastPlace || "ابھی ریکارڈ نہیں";
+      }
+    });
+
+    window.updateResult = function() {
+      const name = document.getElementById('ownerName').value;
+      const number = document.getElementById('pigeonNumber').value;
+      const time = document.getElementById('landTime').value;
+
+      if(!name || !number || !time) {
+        alert("تمام خانوں کو پر کریں!");
+        return;
+      }
+
+      const updateMsg = `${name} کا کبوتر #${number} شام ${time} پر بیٹھا`;
+      
+      set(ref(db, 'tournament/'), {
+        latestUpdate: updateMsg,
+        satCount: 1,
+        firstPlace: `${name} (کبوتر #${number}) - ${time}`
+      }).then(() => {
+        alert("رزلٹ اپڈیٹ ہو گیا!");
+      });
+    }
+  </script>
+</body>
+</html>
