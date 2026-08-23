@@ -14,13 +14,15 @@
         button:hover { background-color: #071f3d; }
         
         .admin-btn { background-color: #4CAF50; max-width: 200px; margin-bottom: 10px; }
+        .delete-btn { background-color: #d32f2f; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+        .delete-btn:hover { background-color: #9a0007; }
         
         .table-container { overflow-x: auto; max-width: 100%; }
-        table { width: 100%; border-collapse: collapse; background: white; min-width: 650px; }
-        th { background-color: #0b2f5c; color: white; padding: 10px; border: 1px solid #0b2f5c; font-size: 14px; }
-        td { padding: 8px; border: 1px solid #e0e0e0; font-size: 14px; }
+        table { width: 100%; border-collapse: collapse; background: white; min-width: 1000px; }
+        th { background-color: #0b2f5c; color: white; padding: 10px; border: 1px solid #0b2f5c; font-size: 13px; }
+        td { padding: 8px; border: 1px solid #e0e0e0; font-size: 13px; }
         
-        .time-badge { border: 1px solid #0b2f5c; padding: 3px 8px; border-radius: 5px; display: inline-block; font-weight: bold; color: #0b2f5c; }
+        .time-badge { border: 1px solid #0b2f5c; padding: 3px 6px; border-radius: 5px; display: inline-block; font-weight: bold; color: #0b2f5c; }
         .total-badge { background-color: #e8f5e9; border: 1px solid #2e7d32; color: #2e7d32; font-weight: bold; padding: 4px 8px; border-radius: 5px; }
     </style>
 </head>
@@ -34,17 +36,21 @@
     <!-- Admin Entry Form (Initially Hidden) -->
     <div id="adminForm" class="card" style="display: none;">
         <h3>📝 نئی اینٹری / وقت اپڈیٹ کریں</h3>
-        <input type="text" id="ownerName" placeholder="مالک کا نام (مثلاً Ali)">
-        <input type="text" id="timesInput" placeholder="بیٹھنے کے اوقات (مثلاً 12.50,01.15,02.25)">
+        <input type="text" id="ownerName" placeholder="مالک کا نام (مثلاً Ehsan)">
+        <input type="text" id="timesInput" placeholder="بیٹھنے کے اوقات (مثلاً 12.50, 01.15, 02.25)">
         <button onclick="addOrUpdateEntry()">💾 جدول میں شامل کریں</button>
     </div>
 
-    <!-- Results Table (Visible to Everyone) -->
+    <!-- Results Table -->
     <div class="table-container">
         <table>
             <thead>
                 <tr>
                     <th>Total Time</th>
+                    <th>Pigeon 9</th>
+                    <th>Pigeon 8</th>
+                    <th>Pigeon 7</th>
+                    <th>Pigeon 6</th>
                     <th>Pigeon 5</th>
                     <th>Pigeon 4</th>
                     <th>Pigeon 3</th>
@@ -52,6 +58,7 @@
                     <th>Pigeon 1</th>
                     <th>Name</th>
                     <th>#</th>
+                    <th id="actionHeader" style="display: none;">Action</th>
                 </tr>
             </thead>
             <tbody id="pigeonTableBody">
@@ -61,27 +68,24 @@
     </div>
 
     <script>
-        // ایڈمن پاسورڈ
         const ADMIN_PASSWORD = "1234"; 
         let isAdminLoggedIn = false;
-
-        // صبح اڑنے کا وقت (06:00 AM)
         const START_TIME = "06.00"; 
 
-        // ڈیٹا لسٹ
+        // 9 کبوتروں کا ڈیٹا
         let players = [
-            { name: "Ali", times: ["12.50", "01.15", "02.25", "-", "-"] },
-            { name: "Itsham", times: ["2.50", "-", "-", "-", "-"] },
-            { name: "Khuram", times: ["9.50", "-", "-", "-", "-"] },
-            { name: "Ahmed", times: ["2.34", "-", "-", "-", "-"] },
-            { name: "Taaj", times: ["4.16", "4.20", "4.30", "-", "-"] },
-            { name: "Rehman", times: ["7.15", "-", "-", "-", "-"] },
-            { name: "Tariq", times: ["6.45", "-", "-", "-", "-"] },
-            { name: "Tanveer", times: ["8.45", "-", "-", "-", "-"] },
-            { name: "Phoola", times: ["10.15", "-", "-", "-", "-"] }
+            { name: "Ali", times: ["12.50", "01.15", "02.25", "-", "-", "-", "-", "-", "-"] },
+            { name: "Itsham", times: ["2.50", "-", "-", "-", "-", "-", "-", "-", "-"] },
+            { name: "Khuram", times: ["9.50", "-", "-", "-", "-", "-", "-", "-", "-"] },
+            { name: "Ahmed", times: ["2.34", "-", "-", "-", "-", "-", "-", "-", "-"] },
+            { name: "Taaj", times: ["4.16", "4.20", "4.30", "-", "-", "-", "-", "-", "-"] },
+            { name: "Rehman", times: ["7.15", "-", "-", "-", "-", "-", "-", "-", "-"] },
+            { name: "Tariq", times: ["6.45", "-", "-", "-", "-", "-", "-", "-", "-"] },
+            { name: "Tanveer", times: ["8.45", "-", "-", "-", "-", "-", "-", "-", "-"] },
+            { name: "Phoola", times: ["10.15", "-", "-", "-", "-", "-", "-", "-", "-"] }
         ];
 
-        // Total Flying Time Calculation Function
+        // Total Flying Time Calculation
         function calculateTotalTime(timesArray) {
             let totalMinutes = 0;
             let hasValidTime = false;
@@ -95,7 +99,6 @@
                     let h = parseInt(parts[0]) || 0;
                     let m = parseInt(parts[1]) || 0;
 
-                    // PM Conversion (e.g., 01.15 PM -> 13:15)
                     if (h < 6) {
                         h += 12; 
                     }
@@ -117,7 +120,7 @@
             return `${totalHours}.${remainingMinutes < 10 ? '0' : ''}${remainingMinutes}`;
         }
 
-        // Render Table Data
+        // Table Render Function
         function renderTable() {
             const tbody = document.getElementById('pigeonTableBody');
             tbody.innerHTML = '';
@@ -128,8 +131,8 @@
                 let rowHtml = `<tr>
                     <td><span class="total-badge">${totalTime}</span></td>`;
                 
-                // Show pigeons from Pigeon 5 down to Pigeon 1
-                for (let i = 4; i >= 0; i--) {
+                // Show pigeons from Pigeon 9 down to Pigeon 1
+                for (let i = 8; i >= 0; i--) {
                     let val = player.times[i] || '-';
                     if (val !== '-') {
                         rowHtml += `<td><span class="time-badge">${val}</span></td>`;
@@ -139,8 +142,14 @@
                 }
 
                 rowHtml += `<td><strong>${player.name}</strong></td>
-                    <td>${index + 1}</td>
-                </tr>`;
+                    <td>${index + 1}</td>`;
+
+                // Add delete button column if Admin is logged in
+                if (isAdminLoggedIn) {
+                    rowHtml += `<td><button class="delete-btn" onclick="deletePlayer(${index})">حذف کریں</button></td>`;
+                }
+
+                rowHtml += `</tr>`;
                 
                 tbody.innerHTML += rowHtml;
             });
@@ -153,17 +162,28 @@
                 if (pass === ADMIN_PASSWORD) {
                     isAdminLoggedIn = true;
                     document.getElementById('adminForm').style.display = 'block';
-                    alert("لاگ ان کامیاب! اب آپ وقت اپڈیٹ کر سکتے ہیں۔");
+                    document.getElementById('actionHeader').style.display = 'table-cell';
+                    alert("لاگ ان کامیاب!");
                 } else {
                     alert("غلط پاسورڈ!");
                 }
             } else {
                 isAdminLoggedIn = false;
                 document.getElementById('adminForm').style.display = 'none';
+                document.getElementById('actionHeader').style.display = 'none';
+            }
+            renderTable();
+        }
+
+        // Delete Player Function
+        function deletePlayer(index) {
+            if (confirm(`کیا آپ واقعی ${players[index].name} کا ریکارڈر حذف کرنا چاہتے ہیں؟`)) {
+                players.splice(index, 1);
+                renderTable();
             }
         }
 
-        // Add or Update Entry Function
+        // Add or Update Entry
         function addOrUpdateEntry() {
             let name = document.getElementById('ownerName').value.trim();
             let timesRaw = document.getElementById('timesInput').value.trim();
@@ -175,7 +195,8 @@
 
             let timesArr = timesRaw.split(',').map(t => t.trim());
             
-            while (timesArr.length < 5) {
+            // 9 کبوتروں کے لیے فل کریں
+            while (timesArr.length < 9) {
                 timesArr.push('-');
             }
 
@@ -189,10 +210,10 @@
             document.getElementById('ownerName').value = '';
             document.getElementById('timesInput').value = '';
             renderTable();
-            alert("وقت کامیابی سے اپڈیٹ ہو گیا!");
+            alert("ریکارڈ کامیابی سے اپڈیٹ ہو گیا!");
         }
 
-        // Page Load
+        // Initial Load
         renderTable();
     </script>
 </body>
