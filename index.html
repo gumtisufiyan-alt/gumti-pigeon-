@@ -16,7 +16,7 @@
         .admin-btn { background-color: #4CAF50; max-width: 200px; margin-bottom: 10px; }
         
         .table-container { overflow-x: auto; max-width: 100%; }
-        table { width: 100%; border-collapse: collapse; background: white; min-width: 600px; }
+        table { width: 100%; border-collapse: collapse; background: white; min-width: 650px; }
         th { background-color: #0b2f5c; color: white; padding: 10px; border: 1px solid #0b2f5c; font-size: 14px; }
         td { padding: 8px; border: 1px solid #e0e0e0; font-size: 14px; }
         
@@ -35,7 +35,7 @@
     <div id="adminForm" class="card" style="display: none;">
         <h3>📝 نئی اینٹری / وقت اپڈیٹ کریں</h3>
         <input type="text" id="ownerName" placeholder="مالک کا نام (مثلاً Ali)">
-        <input type="text" id="timesInput" placeholder="اوقات کوما سے الگ کریں (مثلاً 12.50,01.15,02.25)">
+        <input type="text" id="timesInput" placeholder="بیٹھنے کے اوقات (مثلاً 12.50,01.15,02.25)">
         <button onclick="addOrUpdateEntry()">💾 جدول میں شامل کریں</button>
     </div>
 
@@ -44,14 +44,14 @@
         <table>
             <thead>
                 <tr>
-                    <th>#</th>
-                    <th>Name</th>
-                    <th>Pigeon 1</th>
-                    <th>Pigeon 2</th>
-                    <th>Pigeon 3</th>
-                    <th>Pigeon 4</th>
-                    <th>Pigeon 5</th>
                     <th>Total Time</th>
+                    <th>Pigeon 5</th>
+                    <th>Pigeon 4</th>
+                    <th>Pigeon 3</th>
+                    <th>Pigeon 2</th>
+                    <th>Pigeon 1</th>
+                    <th>Name</th>
+                    <th>#</th>
                 </tr>
             </thead>
             <tbody id="pigeonTableBody">
@@ -61,11 +61,14 @@
     </div>
 
     <script>
-        // پاسورڈ سیٹ کریں (یہاں اپنا پسندیدہ پاسورڈ لکھیں)
-        const ADMIN_PASSWORD = "1212"; 
+        // ایڈمن پاسورڈ
+        const ADMIN_PASSWORD = "1234"; 
         let isAdminLoggedIn = false;
 
-        // پہلے سے موجود ڈیٹا
+        // صبح اڑنے کا وقت (06:00 AM)
+        const START_TIME = "06.00"; 
+
+        // ڈیٹا لسٹ
         let players = [
             { name: "Ali", times: ["12.50", "01.15", "02.25", "-", "-"] },
             { name: "Itsham", times: ["2.50", "-", "-", "-", "-"] },
@@ -78,29 +81,43 @@
             { name: "Phoola", times: ["10.15", "-", "-", "-", "-"] }
         ];
 
-        // Total Time Calculation Logic
+        // Total Flying Time Calculation Function
         function calculateTotalTime(timesArray) {
             let totalMinutes = 0;
             let hasValidTime = false;
 
+            let startParts = START_TIME.split('.');
+            let startInMinutes = (parseInt(startParts[0]) * 60) + (parseInt(startParts[1]) || 0);
+
             timesArray.forEach(t => {
                 if (t && t !== '-') {
                     let parts = t.toString().trim().split('.');
-                    let hours = parseInt(parts[0]) || 0;
-                    let minutes = parseInt(parts[1]) || 0;
-                    totalMinutes += (hours * 60) + minutes;
-                    hasValidTime = true;
+                    let h = parseInt(parts[0]) || 0;
+                    let m = parseInt(parts[1]) || 0;
+
+                    // PM Conversion (e.g., 01.15 PM -> 13:15)
+                    if (h < 6) {
+                        h += 12; 
+                    }
+
+                    let landingInMinutes = (h * 60) + m;
+
+                    if (landingInMinutes >= startInMinutes) {
+                        totalMinutes += (landingInMinutes - startInMinutes);
+                        hasValidTime = true;
+                    }
                 }
             });
 
             if (!hasValidTime) return "-";
 
-            let h = Math.floor(totalMinutes / 60);
-            let m = totalMinutes % 60;
-            return `${h}.${m < 10 ? '0' : ''}${m}`;
+            let totalHours = Math.floor(totalMinutes / 60);
+            let remainingMinutes = totalMinutes % 60;
+
+            return `${totalHours}.${remainingMinutes < 10 ? '0' : ''}${remainingMinutes}`;
         }
 
-        // Render Table
+        // Render Table Data
         function renderTable() {
             const tbody = document.getElementById('pigeonTableBody');
             tbody.innerHTML = '';
@@ -109,10 +126,10 @@
                 let totalTime = calculateTotalTime(player.times);
                 
                 let rowHtml = `<tr>
-                    <td>${index + 1}</td>
-                    <td><strong>${player.name}</strong></td>`;
+                    <td><span class="total-badge">${totalTime}</span></td>`;
                 
-                for (let i = 0; i < 5; i++) {
+                // Show pigeons from Pigeon 5 down to Pigeon 1
+                for (let i = 4; i >= 0; i--) {
                     let val = player.times[i] || '-';
                     if (val !== '-') {
                         rowHtml += `<td><span class="time-badge">${val}</span></td>`;
@@ -121,12 +138,15 @@
                     }
                 }
 
-                rowHtml += `<td><span class="total-badge">${totalTime}</span></td></tr>`;
+                rowHtml += `<td><strong>${player.name}</strong></td>
+                    <td>${index + 1}</td>
+                </tr>`;
+                
                 tbody.innerHTML += rowHtml;
             });
         }
 
-        // Admin Toggle
+        // Admin Toggle Function
         function toggleAdmin() {
             if (!isAdminLoggedIn) {
                 let pass = prompt("ایڈمن پاسورڈ درج کریں:");
@@ -143,7 +163,7 @@
             }
         }
 
-        // Add or Update Entry
+        // Add or Update Entry Function
         function addOrUpdateEntry() {
             let name = document.getElementById('ownerName').value.trim();
             let timesRaw = document.getElementById('timesInput').value.trim();
@@ -155,12 +175,10 @@
 
             let timesArr = timesRaw.split(',').map(t => t.trim());
             
-            // Fill remaining with '-' up to 5 pigeons
             while (timesArr.length < 5) {
                 timesArr.push('-');
             }
 
-            // Check if player exists, update or add
             let existingPlayer = players.find(p => p.name.toLowerCase() === name.toLowerCase());
             if (existingPlayer) {
                 existingPlayer.times = timesArr;
@@ -168,14 +186,13 @@
                 players.push({ name: name, times: timesArr });
             }
 
-            // Clear inputs and refresh table
             document.getElementById('ownerName').value = '';
             document.getElementById('timesInput').value = '';
             renderTable();
             alert("وقت کامیابی سے اپڈیٹ ہو گیا!");
         }
 
-        // Initial Render
+        // Page Load
         renderTable();
     </script>
 </body>
