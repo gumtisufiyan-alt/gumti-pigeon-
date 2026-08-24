@@ -105,9 +105,10 @@ tr:hover td{
     gap:5px;
 }
 
+/* PUBLIC PIGEON CIRCLE */
 .circle{
-    width:78px;
-    height:78px;
+    width:88px;
+    height:88px;
     border-radius:50%;
     border:3px solid #ffd700;
     background:radial-gradient(circle,#18563d,#08281d);
@@ -116,17 +117,35 @@ tr:hover td{
     align-items:center;
     justify-content:center;
     box-shadow:0 0 15px rgba(255,215,0,.12);
+    padding:4px;
 }
 
 .circle strong{
-    font-size:16px;
+    font-size:15px;
+    color:#ffffff;
+    line-height:1.2;
 }
 
 .circle small{
-    color:#bde8d3;
+    color:#7dffbb;
     font-size:10px;
+    margin-top:3px;
 }
 
+/* ACTUAL TIME */
+.pigeon-time{
+    color:#ffd700 !important;
+    font-size:14px !important;
+    font-weight:bold;
+}
+
+/* DURATION */
+.pigeon-duration{
+    color:#7dffbb !important;
+    font-size:11px !important;
+}
+
+/* TOTAL */
 .total{
     width:95px;
     height:95px;
@@ -136,6 +155,10 @@ tr:hover td{
 .total strong{
     font-size:17px;
     color:#fff;
+}
+
+.total small{
+    color:#ffe98a;
 }
 
 /* TOP 5 */
@@ -299,12 +322,26 @@ button{
 }
 
 @media(max-width:600px){
+
     header h1{
         font-size:22px;
     }
 
     .container{
         padding:10px 5px;
+    }
+
+    .circle{
+        width:82px;
+        height:82px;
+    }
+
+    .pigeon-time{
+        font-size:13px !important;
+    }
+
+    .pigeon-duration{
+        font-size:10px !important;
     }
 }
 </style>
@@ -968,6 +1005,7 @@ function updateAdminTotal(index){
 
 /* =========================================
    RENDER PUBLIC TABLE
+   ONLY PUBLIC DISPLAY CHANGED
 ========================================= */
 
 function renderPublic(){
@@ -1008,10 +1046,13 @@ function renderPublic(){
             const cell =
                 document.createElement("td");
 
+            const actualTime =
+                pigeon.end || "--:--";
+
             const duration =
-                calculateDuration(
-                    pigeon.end || ""
-                );
+                pigeon.end
+                ? calculateDuration(pigeon.end)
+                : "00:00";
 
             cell.innerHTML = `
 
@@ -1019,12 +1060,12 @@ function renderPublic(){
 
                     <div class="circle">
 
-                        <strong>
-                            ${duration}
+                        <strong class="pigeon-time">
+                            🕐 ${actualTime}
                         </strong>
 
-                        <small>
-                            Duration
+                        <small class="pigeon-duration">
+                            ⏱ ${duration}
                         </small>
 
                     </div>
@@ -1361,126 +1402,4 @@ function renderAdmin(){
             table.appendChild(
                 row
             );
-        }
-    );
-}
-
-
-/* =========================================
-   SAVE ALL TO FIREBASE
-========================================= */
-
-function saveAll(showMessage = true){
-
-    const data = {};
-
-    players.forEach(player=>{
-
-        data[player.id] =
-            player;
-    });
-
-
-    playersRef
-        .set(data)
-
-        .then(()=>{
-
-            if(showMessage){
-
-                document.getElementById(
-                    "saveMessage"
-                ).innerText =
-                    "✅ Changes Saved Successfully";
-
-                setTimeout(()=>{
-
-                    document.getElementById(
-                        "saveMessage"
-                    ).innerText = "";
-
-                },3000);
-            }
-
-        })
-
-        .catch(error=>{
-
-            console.error(error);
-
-            document.getElementById(
-                "saveMessage"
-            ).innerText =
-                "❌ Save failed: "
-                + error.message;
-        });
-}
-
-
-/* =========================================
-   LOGIN
-========================================= */
-
-function login(){
-
-    const password =
-        document.getElementById(
-            "password"
-        ).value;
-
-
-    if(password === ADMIN_PASSWORD){
-
-        document.getElementById(
-            "loginBox"
-        ).classList.add("hidden");
-
-        document.getElementById(
-            "adminPanel"
-        ).classList.remove("hidden");
-
-        renderAdmin();
-
-    }else{
-
-        document.getElementById(
-            "loginMessage"
-        ).innerText =
-            "❌ Wrong Password";
-    }
-}
-
-
-/* =========================================
-   LOGOUT
-========================================= */
-
-function logout(){
-
-    document.getElementById(
-        "adminPanel"
-    ).classList.add("hidden");
-
-    document.getElementById(
-        "loginBox"
-    ).classList.remove("hidden");
-
-    document.getElementById(
-        "password"
-    ).value = "";
-
-}
-
-
-/* =========================================
-   INITIAL RENDER
-========================================= */
-
-renderPublic();
-
-renderTop5();
-
-</script>
-
-</body>
-</html>
+       
