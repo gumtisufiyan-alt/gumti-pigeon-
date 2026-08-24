@@ -7,7 +7,9 @@
 <title>گمٹی پیجن فلائنگ ٹورنامنٹ 🕊</title>
 
 <style>
-*{box-sizing:border-box}
+*{
+    box-sizing:border-box;
+}
 
 body{
     margin:0;
@@ -56,11 +58,13 @@ header p{
     box-shadow:0 8px 30px rgba(0,0,0,.45);
 }
 
+/* TABLE LEFT TO RIGHT */
 table{
     width:100%;
-    min-width:1500px;
+    min-width:1450px;
     border-collapse:separate;
     border-spacing:0;
+    direction:ltr;
 }
 
 th{
@@ -69,6 +73,7 @@ th{
     padding:14px 8px;
     border-bottom:2px solid #ffd700;
     font-size:14px;
+    text-align:center;
 }
 
 td{
@@ -83,7 +88,7 @@ tr:hover td{
 }
 
 .player{
-    min-width:140px;
+    min-width:150px;
     font-size:19px;
     font-weight:bold;
     color:#ffd700;
@@ -113,7 +118,9 @@ tr:hover td{
     box-shadow:0 0 15px rgba(255,215,0,.12);
 }
 
-.circle strong{font-size:16px}
+.circle strong{
+    font-size:16px;
+}
 
 .circle small{
     color:#bde8d3;
@@ -129,6 +136,49 @@ tr:hover td{
 .total strong{
     font-size:17px;
     color:#fff;
+}
+
+/* TOP 5 */
+.top5-box{
+    margin-top:25px;
+    background:#0b2b20;
+    border:2px solid #ffd700;
+    border-radius:18px;
+    padding:18px;
+    box-shadow:0 8px 30px rgba(0,0,0,.4);
+}
+
+.top5-title{
+    text-align:center;
+    color:#ffd700;
+    font-size:25px;
+    font-weight:bold;
+    margin-bottom:15px;
+}
+
+.top5-table{
+    min-width:600px;
+}
+
+.top5-table th{
+    background:#806300;
+}
+
+.top5-rank{
+    font-size:20px;
+    font-weight:bold;
+    color:#ffd700;
+}
+
+.top5-name{
+    font-size:18px;
+    font-weight:bold;
+}
+
+.top5-time{
+    color:#7dffbb;
+    font-size:18px;
+    font-weight:bold;
 }
 
 .admin{
@@ -186,7 +236,9 @@ button{
     color:white;
 }
 
-.hidden{display:none}
+.hidden{
+    display:none;
+}
 
 .admin-table{
     width:100%;
@@ -194,7 +246,7 @@ button{
 }
 
 .admin-table table{
-    min-width:1800px;
+    min-width:1550px;
 }
 
 .admin-table th{
@@ -202,7 +254,7 @@ button{
 }
 
 .admin-table input{
-    width:90px;
+    width:100px;
 }
 
 .admin-table .name-input{
@@ -233,9 +285,27 @@ button{
     margin:10px;
 }
 
+.fixed-start{
+    text-align:center;
+    margin:15px auto;
+    padding:12px;
+    max-width:350px;
+    background:#0b2b20;
+    border:2px solid #ffd700;
+    border-radius:12px;
+    color:#ffd700;
+    font-weight:bold;
+    font-size:18px;
+}
+
 @media(max-width:600px){
-    header h1{font-size:22px}
-    .container{padding:10px 5px}
+    header h1{
+        font-size:22px;
+    }
+
+    .container{
+        padding:10px 5px;
+    }
 }
 </style>
 </head>
@@ -253,27 +323,32 @@ button{
     🟢 LIVE TOURNAMENT
 </div>
 
+<div class="fixed-start">
+    ⏰ Fixed Start Time: 6:00 AM
+</div>
+
 <div id="firebaseMessage" class="message">
     🔄 Data loading...
 </div>
 
+<!-- PUBLIC TABLE -->
 <div class="table-box">
 
 <table>
 
 <thead>
 <tr>
-<th>Participant</th>
-<th>Pigeon 1</th>
-<th>Pigeon 2</th>
-<th>Pigeon 3</th>
-<th>Pigeon 4</th>
-<th>Pigeon 5</th>
-<th>Pigeon 6</th>
-<th>Pigeon 7</th>
-<th>Pigeon 8</th>
-<th>Pigeon 9</th>
-<th>🏆 Total Time</th>
+    <th>Participant</th>
+    <th>Pigeon 1</th>
+    <th>Pigeon 2</th>
+    <th>Pigeon 3</th>
+    <th>Pigeon 4</th>
+    <th>Pigeon 5</th>
+    <th>Pigeon 6</th>
+    <th>Pigeon 7</th>
+    <th>Pigeon 8</th>
+    <th>Pigeon 9</th>
+    <th>🏆 Total Time</th>
 </tr>
 </thead>
 
@@ -283,6 +358,34 @@ button{
 
 </div>
 
+<!-- TOP 5 -->
+<div class="top5-box">
+
+<div class="top5-title">
+    🏆 TOP 5 PARTICIPANTS
+</div>
+
+<div class="table-box">
+
+<table class="top5-table">
+
+<thead>
+<tr>
+    <th>Rank</th>
+    <th>Participant</th>
+    <th>🏆 Total Time</th>
+</tr>
+</thead>
+
+<tbody id="top5Table"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<!-- LOGIN -->
 <div id="loginBox" class="login">
 
 <h2>🔐 Admin Login</h2>
@@ -303,6 +406,7 @@ button{
 
 </div>
 
+<!-- ADMIN -->
 <div id="adminPanel" class="admin hidden">
 
 <h2>⚙️ Tournament Admin Panel</h2>
@@ -328,40 +432,55 @@ button{
 <thead>
 
 <tr>
+    <th>Participant Name</th>
 
-<th>Participant Name</th>
+    <th colspan="2">🐦 Pigeon 1</th>
+    <th colspan="2">🐦 Pigeon 2</th>
+    <th colspan="2">🐦 Pigeon 3</th>
+    <th colspan="2">🐦 Pigeon 4</th>
+    <th colspan="2">🐦 Pigeon 5</th>
+    <th colspan="2">🐦 Pigeon 6</th>
+    <th colspan="2">🐦 Pigeon 7</th>
+    <th colspan="2">🐦 Pigeon 8</th>
+    <th colspan="2">🐦 Pigeon 9</th>
 
-<th colspan="3">🐦 Pigeon 1</th>
-<th colspan="3">🐦 Pigeon 2</th>
-<th colspan="3">🐦 Pigeon 3</th>
-<th colspan="3">🐦 Pigeon 4</th>
-<th colspan="3">🐦 Pigeon 5</th>
-<th colspan="3">🐦 Pigeon 6</th>
-<th colspan="3">🐦 Pigeon 7</th>
-<th colspan="3">🐦 Pigeon 8</th>
-<th colspan="3">🐦 Pigeon 9</th>
-
-<th>Total</th>
-<th>Delete</th>
-
+    <th>Total</th>
+    <th>Delete</th>
 </tr>
 
 <tr>
 
-<th></th>
+    <th></th>
 
-<th>Start</th><th>End</th><th>Duration</th>
-<th>Start</th><th>End</th><th>Duration</th>
-<th>Start</th><th>End</th><th>Duration</th>
-<th>Start</th><th>End</th><th>Duration</th>
-<th>Start</th><th>End</th><th>Duration</th>
-<th>Start</th><th>End</th><th>Duration</th>
-<th>Start</th><th>End</th><th>Duration</th>
-<th>Start</th><th>End</th><th>Duration</th>
-<th>Start</th><th>End</th><th>Duration</th>
+    <th>Time</th>
+    <th>Duration</th>
 
-<th></th>
-<th></th>
+    <th>Time</th>
+    <th>Duration</th>
+
+    <th>Time</th>
+    <th>Duration</th>
+
+    <th>Time</th>
+    <th>Duration</th>
+
+    <th>Time</th>
+    <th>Duration</th>
+
+    <th>Time</th>
+    <th>Duration</th>
+
+    <th>Time</th>
+    <th>Duration</th>
+
+    <th>Time</th>
+    <th>Duration</th>
+
+    <th>Time</th>
+    <th>Duration</th>
+
+    <th></th>
+    <th></th>
 
 </tr>
 
@@ -376,7 +495,6 @@ button{
 </div>
 
 </div>
-
 
 <!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -399,23 +517,26 @@ const firebaseConfig = {
 
     apiKey: "AIzaSyBmHOJF-cRDr2DnM2giryDUlMbuv210mrs",
 
-    authDomain: "gumti-pigeon.firebaseapp.com",
+    authDomain:
+        "gumti-pigeon.firebaseapp.com",
 
     databaseURL:
         "https://gumti-pigeon-default-rtdb.firebaseio.com",
 
-    projectId: "gumti-pigeon",
+    projectId:
+        "gumti-pigeon",
 
     storageBucket:
         "gumti-pigeon.firebasestorage.app",
 
-    messagingSenderId: "976301963421",
+    messagingSenderId:
+        "976301963421",
 
     appId:
         "1:976301963421:web:ebec5105e7d774b20c3c74",
 
-    measurementId: "G-3M61X5Y8CR"
-
+    measurementId:
+        "G-3M61X5Y8CR"
 };
 
 
@@ -429,8 +550,14 @@ const db = firebase.database();
 
 const playersRef = db.ref("players");
 
-
 let players = [];
+
+
+/* =========================================
+   FIXED START TIME
+========================================= */
+
+const FIXED_START_TIME = "06:00";
 
 
 /* =========================================
@@ -468,81 +595,13 @@ function timeToMinutes(time){
 
 
 /* =========================================
-   DURATION
+   FORMAT MINUTES
 ========================================= */
 
-function calculateDuration(start,end){
+function formatDuration(totalMinutes){
 
-    const startMinutes =
-        timeToMinutes(start);
-
-    const endMinutes =
-        timeToMinutes(end);
-
-    if(
-        startMinutes === null ||
-        endMinutes === null
-    ){
+    if(totalMinutes === null || isNaN(totalMinutes)){
         return "00:00";
-    }
-
-    let endValue = endMinutes;
-
-    if(endValue < startMinutes){
-        endValue += 1440;
-    }
-
-    const duration =
-        endValue - startMinutes;
-
-    const hours =
-        Math.floor(duration / 60);
-
-    const minutes =
-        duration % 60;
-
-    return String(hours).padStart(2,"0")
-        + ":"
-        + String(minutes).padStart(2,"0");
-}
-
-
-/* =========================================
-   TOTAL
-========================================= */
-
-function calculateTotal(player){
-
-    let totalMinutes = 0;
-
-    for(let i=0;i<9;i++){
-
-        const pigeon =
-            player.pigeons[i] || {};
-
-        const start =
-            pigeon.start || "";
-
-        const end =
-            pigeon.end || "";
-
-        let s =
-            timeToMinutes(start);
-
-        let e =
-            timeToMinutes(end);
-
-        if(
-            s !== null &&
-            e !== null
-        ){
-
-            if(e < s){
-                e += 1440;
-            }
-
-            totalMinutes += e - s;
-        }
     }
 
     const hours =
@@ -554,6 +613,81 @@ function calculateTotal(player){
     return String(hours).padStart(2,"0")
         + ":"
         + String(minutes).padStart(2,"0");
+}
+
+
+/* =========================================
+   DURATION FROM 6 AM
+========================================= */
+
+function calculateDuration(end){
+
+    const startMinutes =
+        timeToMinutes(FIXED_START_TIME);
+
+    const endMinutes =
+        timeToMinutes(end);
+
+    if(endMinutes === null){
+        return "00:00";
+    }
+
+    let duration =
+        endMinutes - startMinutes;
+
+    if(duration < 0){
+        duration += 1440;
+    }
+
+    return formatDuration(duration);
+}
+
+
+/* =========================================
+   TOTAL TIME
+========================================= */
+
+function calculateTotalMinutes(player){
+
+    let totalMinutes = 0;
+
+    for(let i=0; i<9; i++){
+
+        const pigeon =
+            player.pigeons &&
+            player.pigeons[i]
+            ? player.pigeons[i]
+            : {};
+
+        const end =
+            pigeon.end || "";
+
+        const endMinutes =
+            timeToMinutes(end);
+
+        if(endMinutes !== null){
+
+            let duration =
+                endMinutes -
+                timeToMinutes(FIXED_START_TIME);
+
+            if(duration < 0){
+                duration += 1440;
+            }
+
+            totalMinutes += duration;
+        }
+    }
+
+    return totalMinutes;
+}
+
+
+function calculateTotal(player){
+
+    return formatDuration(
+        calculateTotalMinutes(player)
+    );
 }
 
 
@@ -573,10 +707,30 @@ playersRef.on("value", function(snapshot){
     }else{
 
         players = [];
-
     }
 
+    /* Make sure every player has 9 pigeons */
+
+    players.forEach(player=>{
+
+        if(!player.pigeons){
+            player.pigeons = [];
+        }
+
+        for(let i=0; i<9; i++){
+
+            if(!player.pigeons[i]){
+                player.pigeons[i] = {
+                    start:"",
+                    end:""
+                };
+            }
+        }
+    });
+
     renderPublic();
+
+    renderTop5();
 
     if(
         !document
@@ -586,7 +740,6 @@ playersRef.on("value", function(snapshot){
     ){
 
         renderAdmin();
-
     }
 
     document.getElementById(
@@ -601,16 +754,19 @@ playersRef.on("value", function(snapshot){
    FIREBASE ERROR
 ========================================= */
 
-playersRef.on("value", function(){}, function(error){
+playersRef.on(
+    "value",
+    function(){},
+    function(error){
 
-    console.error(error);
+        console.error(error);
 
-    document.getElementById(
-        "firebaseMessage"
-    ).innerText =
-        "❌ Firebase Database permission error";
-
-});
+        document.getElementById(
+            "firebaseMessage"
+        ).innerText =
+            "❌ Firebase Database permission error";
+    }
+);
 
 
 /* =========================================
@@ -627,19 +783,16 @@ function addPlayer(){
         name:
             "New Participant",
 
-        pigeons: []
-
+        pigeons:[]
     };
 
-    for(let i=0;i<9;i++){
+    for(let i=0; i<9; i++){
 
         newPlayer.pigeons.push({
 
             start:"",
             end:""
-
         });
-
     }
 
     players.push(newPlayer);
@@ -649,6 +802,8 @@ function addPlayer(){
     renderAdmin();
 
     renderPublic();
+
+    renderTop5();
 }
 
 
@@ -663,6 +818,7 @@ function deletePlayer(index){
             "کیا آپ اس participant کو delete کرنا چاہتے ہیں؟"
         )
     ){
+
         return;
     }
 
@@ -673,15 +829,7 @@ function deletePlayer(index){
         return;
     }
 
-    /*
-       Local array سے delete
-    */
-
     players.splice(index,1);
-
-    /*
-       Firebase میں مکمل updated list save
-    */
 
     saveAll();
 
@@ -689,11 +837,12 @@ function deletePlayer(index){
 
     renderPublic();
 
+    renderTop5();
+
     document.getElementById(
         "saveMessage"
     ).innerText =
         "✅ Participant permanently deleted";
-
 }
 
 
@@ -723,20 +872,27 @@ function updateField(
 
                 start:"",
                 end:""
-
             };
-
     }
 
-    players[playerIndex]
-        .pigeons[pigeonIndex][type] =
-        value;
+    /*
+       New system uses END time.
+       START is kept empty so old Firebase
+       structure remains compatible.
+    */
+
+    if(type === "end"){
+
+        players[playerIndex]
+            .pigeons[pigeonIndex]
+            .end = value;
+    }
 
     updateAdminTotal(playerIndex);
 
-    /*
-       Time change ہوتے ہی Firebase میں save
-    */
+    renderPublic();
+
+    renderTop5();
 
     saveAll(false);
 }
@@ -757,9 +913,7 @@ function updateName(index,value){
 
     renderPublic();
 
-    /*
-       Name بھی فوراً Firebase میں save
-    */
+    renderTop5();
 
     saveAll(false);
 }
@@ -772,7 +926,9 @@ function updateName(index,value){
 function updateAdminTotal(index){
 
     const total =
-        calculateTotal(players[index]);
+        calculateTotal(
+            players[index]
+        );
 
     const element =
         document.getElementById(
@@ -780,18 +936,19 @@ function updateAdminTotal(index){
         );
 
     if(element){
+
         element.innerText =
             total;
     }
 
-    for(let i=0;i<9;i++){
+    for(let i=0; i<9; i++){
 
         const pigeon =
-            players[index].pigeons[i] || {};
+            players[index].pigeons[i]
+            || {};
 
         const duration =
             calculateDuration(
-                pigeon.start || "",
                 pigeon.end || ""
             );
 
@@ -801,6 +958,7 @@ function updateAdminTotal(index){
             );
 
         if(el){
+
             el.innerText =
                 duration;
         }
@@ -809,7 +967,7 @@ function updateAdminTotal(index){
 
 
 /* =========================================
-   RENDER PUBLIC
+   RENDER PUBLIC TABLE
 ========================================= */
 
 function renderPublic(){
@@ -826,6 +984,8 @@ function renderPublic(){
         const row =
             document.createElement("tr");
 
+        /* PARTICIPANT */
+
         const name =
             document.createElement("td");
 
@@ -837,7 +997,10 @@ function renderPublic(){
 
         row.appendChild(name);
 
-        for(let i=0;i<9;i++){
+
+        /* 9 PIGEONS */
+
+        for(let i=0; i<9; i++){
 
             const pigeon =
                 player.pigeons[i] || {};
@@ -847,7 +1010,6 @@ function renderPublic(){
 
             const duration =
                 calculateDuration(
-                    pigeon.start || "",
                     pigeon.end || ""
                 );
 
@@ -868,11 +1030,13 @@ function renderPublic(){
                     </div>
 
                 </div>
-
             `;
 
             row.appendChild(cell);
         }
+
+
+        /* TOTAL */
 
         const total =
             document.createElement("td");
@@ -890,7 +1054,6 @@ function renderPublic(){
                 </small>
 
             </div>
-
         `;
 
         row.appendChild(total);
@@ -898,6 +1061,119 @@ function renderPublic(){
         table.appendChild(row);
 
     });
+}
+
+
+/* =========================================
+   TOP 5
+========================================= */
+
+function renderTop5(){
+
+    const table =
+        document.getElementById(
+            "top5Table"
+        );
+
+    if(!table){
+        return;
+    }
+
+    table.innerHTML = "";
+
+    const rankedPlayers =
+        [...players]
+
+        .map(player=>({
+
+            player:player,
+
+            totalMinutes:
+                calculateTotalMinutes(player)
+        }))
+
+        .filter(item =>
+            item.player &&
+            item.player.name
+        )
+
+        .sort(
+            (a,b) =>
+                b.totalMinutes -
+                a.totalMinutes
+        )
+
+        .slice(0,5);
+
+
+    if(rankedPlayers.length === 0){
+
+        table.innerHTML = `
+
+            <tr>
+
+                <td colspan="3">
+                    ابھی کوئی participant موجود نہیں
+                </td>
+
+            </tr>
+        `;
+
+        return;
+    }
+
+
+    rankedPlayers.forEach(
+        (item,index)=>{
+
+            const row =
+                document.createElement("tr");
+
+            const rank =
+                document.createElement("td");
+
+            rank.className =
+                "top5-rank";
+
+            const medals =
+                ["🥇","🥈","🥉","4️⃣","5️⃣"];
+
+            rank.innerText =
+                medals[index] ||
+                (index+1);
+
+            row.appendChild(rank);
+
+
+            const name =
+                document.createElement("td");
+
+            name.className =
+                "top5-name";
+
+            name.innerText =
+                item.player.name;
+
+            row.appendChild(name);
+
+
+            const time =
+                document.createElement("td");
+
+            time.className =
+                "top5-time";
+
+            time.innerText =
+                formatDuration(
+                    item.totalMinutes
+                );
+
+            row.appendChild(time);
+
+
+            table.appendChild(row);
+        }
+    );
 }
 
 
@@ -914,221 +1190,179 @@ function renderAdmin(){
 
     table.innerHTML = "";
 
+
     players.forEach(
         (player,index)=>{
 
-        const row =
-            document.createElement("tr");
+            const row =
+                document.createElement("tr");
 
 
-        /* NAME */
+            /* NAME */
 
-        const nameCell =
-            document.createElement("td");
+            const nameCell =
+                document.createElement("td");
 
-        const nameInput =
-            document.createElement("input");
+            const nameInput =
+                document.createElement("input");
 
-        nameInput.className =
-            "name-input";
+            nameInput.className =
+                "name-input";
 
-        nameInput.value =
-            player.name || "";
+            nameInput.value =
+                player.name || "";
 
-        nameInput.addEventListener(
-            "change",
-            function(){
+            nameInput.addEventListener(
+                "change",
+                function(){
 
-                updateName(
-                    index,
-                    this.value
+                    updateName(
+                        index,
+                        this.value
+                    );
+
+                }
+            );
+
+            nameCell.appendChild(
+                nameInput
+            );
+
+            row.appendChild(
+                nameCell
+            );
+
+
+            /* 9 PIGEONS */
+
+            for(let i=0; i<9; i++){
+
+                const pigeon =
+                    player.pigeons[i]
+                    || {
+                        start:"",
+                        end:""
+                    };
+
+
+                /* TIME / END */
+
+                const timeCell =
+                    document.createElement("td");
+
+                const timeInput =
+                    document.createElement("input");
+
+                timeInput.type =
+                    "time";
+
+                timeInput.value =
+                    pigeon.end || "";
+
+                timeInput.addEventListener(
+                    "change",
+                    function(){
+
+                        updateField(
+                            index,
+                            i,
+                            "end",
+                            this.value
+                        );
+
+                    }
                 );
 
+                timeCell.appendChild(
+                    timeInput
+                );
+
+                row.appendChild(
+                    timeCell
+                );
+
+
+                /* DURATION */
+
+                const durationCell =
+                    document.createElement("td");
+
+                const duration =
+                    calculateDuration(
+                        pigeon.end || ""
+                    );
+
+                durationCell.innerHTML = `
+
+                    <span
+                        class="duration"
+                        id="duration-${index}-${i}"
+                    >
+                        ${duration}
+                    </span>
+                `;
+
+                row.appendChild(
+                    durationCell
+                );
             }
-        );
-
-        nameCell.appendChild(
-            nameInput
-        );
-
-        row.appendChild(
-            nameCell
-        );
 
 
-        /* 9 PIGEONS */
+            /* TOTAL */
 
-        for(let i=0;i<9;i++){
-
-            const pigeon =
-                player.pigeons[i] || {
-
-                    start:"",
-                    end:""
-
-                };
-
-
-            /* START */
-
-            const startCell =
+            const totalCell =
                 document.createElement("td");
 
-            const startInput =
-                document.createElement("input");
-
-            startInput.type =
-                "time";
-
-            startInput.value =
-                pigeon.start || "";
-
-            startInput.addEventListener(
-                "change",
-                function(){
-
-                    updateField(
-                        index,
-                        i,
-                        "start",
-                        this.value
-                    );
-
-                }
-            );
-
-            startCell.appendChild(
-                startInput
-            );
-
-            row.appendChild(
-                startCell
-            );
-
-
-            /* END */
-
-            const endCell =
-                document.createElement("td");
-
-            const endInput =
-                document.createElement("input");
-
-            endInput.type =
-                "time";
-
-            endInput.value =
-                pigeon.end || "";
-
-            endInput.addEventListener(
-                "change",
-                function(){
-
-                    updateField(
-                        index,
-                        i,
-                        "end",
-                        this.value
-                    );
-
-                }
-            );
-
-            endCell.appendChild(
-                endInput
-            );
-
-            row.appendChild(
-                endCell
-            );
-
-
-            /* DURATION */
-
-            const durationCell =
-                document.createElement("td");
-
-            const duration =
-                calculateDuration(
-                    pigeon.start || "",
-                    pigeon.end || ""
-                );
-
-            durationCell.innerHTML = `
+            totalCell.innerHTML = `
 
                 <span
-                    class="duration"
-                    id="duration-${index}-${i}"
+                    class="admin-total"
+                    id="admin-total-${index}"
                 >
-                    ${duration}
+                    ${calculateTotal(player)}
                 </span>
-
             `;
 
             row.appendChild(
-                durationCell
+                totalCell
             );
 
+
+            /* DELETE */
+
+            const deleteCell =
+                document.createElement("td");
+
+            const deleteButton =
+                document.createElement("button");
+
+            deleteButton.className =
+                "danger";
+
+            deleteButton.innerText =
+                "Delete";
+
+            deleteButton.onclick =
+                function(){
+
+                    deletePlayer(index);
+
+                };
+
+            deleteCell.appendChild(
+                deleteButton
+            );
+
+            row.appendChild(
+                deleteCell
+            );
+
+
+            table.appendChild(
+                row
+            );
         }
-
-
-        /* TOTAL */
-
-        const totalCell =
-            document.createElement("td");
-
-        totalCell.innerHTML = `
-
-            <span
-                class="admin-total"
-                id="admin-total-${index}"
-            >
-                ${calculateTotal(player)}
-            </span>
-
-        `;
-
-        row.appendChild(
-            totalCell
-        );
-
-
-        /* DELETE */
-
-        const deleteCell =
-            document.createElement("td");
-
-        const deleteButton =
-            document.createElement("button");
-
-        deleteButton.className =
-            "danger";
-
-        deleteButton.innerText =
-            "Delete";
-
-        deleteButton.onclick =
-            function(){
-
-                deletePlayer(index);
-
-            };
-
-        deleteCell.appendChild(
-            deleteButton
-        );
-
-        row.appendChild(
-            deleteCell
-        );
-
-
-        table.appendChild(
-            row
-        );
-
-    });
-
+    );
 }
 
 
@@ -1138,21 +1372,18 @@ function renderAdmin(){
 
 function saveAll(showMessage = true){
 
-    /*
-       Firebase میں پوری players list save
-    */
-
     const data = {};
 
     players.forEach(player=>{
 
         data[player.id] =
             player;
-
     });
+
 
     playersRef
         .set(data)
+
         .then(()=>{
 
             if(showMessage){
@@ -1169,10 +1400,10 @@ function saveAll(showMessage = true){
                     ).innerText = "";
 
                 },3000);
-
             }
 
         })
+
         .catch(error=>{
 
             console.error(error);
@@ -1180,8 +1411,8 @@ function saveAll(showMessage = true){
             document.getElementById(
                 "saveMessage"
             ).innerText =
-                "❌ Save failed: " + error.message;
-
+                "❌ Save failed: "
+                + error.message;
         });
 }
 
@@ -1196,6 +1427,7 @@ function login(){
         document.getElementById(
             "password"
         ).value;
+
 
     if(password === ADMIN_PASSWORD){
 
@@ -1215,7 +1447,6 @@ function login(){
             "loginMessage"
         ).innerText =
             "❌ Wrong Password";
-
     }
 }
 
@@ -1239,6 +1470,15 @@ function logout(){
     ).value = "";
 
 }
+
+
+/* =========================================
+   INITIAL RENDER
+========================================= */
+
+renderPublic();
+
+renderTop5();
 
 </script>
 
