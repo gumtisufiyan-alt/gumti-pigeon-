@@ -58,7 +58,6 @@ header p{
     box-shadow:0 8px 30px rgba(0,0,0,.45);
 }
 
-/* TABLE LEFT TO RIGHT */
 table{
     width:100%;
     min-width:1450px;
@@ -105,7 +104,6 @@ tr:hover td{
     gap:5px;
 }
 
-/* PUBLIC PIGEON CIRCLE */
 .circle{
     width:88px;
     height:88px;
@@ -132,20 +130,17 @@ tr:hover td{
     margin-top:3px;
 }
 
-/* ACTUAL TIME */
 .pigeon-time{
     color:#ffd700 !important;
     font-size:14px !important;
     font-weight:bold;
 }
 
-/* DURATION */
 .pigeon-duration{
     color:#7dffbb !important;
     font-size:11px !important;
 }
 
-/* TOTAL */
 .total{
     width:95px;
     height:95px;
@@ -161,7 +156,6 @@ tr:hover td{
     color:#ffe98a;
 }
 
-/* TOP 5 */
 .top5-box{
     margin-top:25px;
     background:#0b2b20;
@@ -218,12 +212,22 @@ tr:hover td{
 }
 
 .login{
-    max-width:400px;
+    max-width:420px;
     margin:30px auto;
     padding:25px;
     background:#0b2b20;
     border-radius:18px;
     text-align:center;
+    border:1px solid #315447;
+}
+
+.login h2{
+    color:#ffd700;
+}
+
+.login input{
+    width:100%;
+    margin:6px 0;
 }
 
 input,select{
@@ -369,6 +373,7 @@ button{
 </div>
 
 <!-- PUBLIC TABLE -->
+
 <div class="table-box">
 
 <table>
@@ -395,7 +400,9 @@ button{
 
 </div>
 
+
 <!-- TOP 5 -->
+
 <div class="top5-box">
 
 <div class="top5-title">
@@ -422,15 +429,25 @@ button{
 
 </div>
 
+
 <!-- LOGIN -->
+
 <div id="loginBox" class="login">
 
 <h2>🔐 Admin Login</h2>
 
 <input
+    type="email"
+    id="adminEmail"
+    placeholder="Admin Email"
+    autocomplete="username"
+>
+
+<input
     type="password"
-    id="password"
+    id="adminPassword"
     placeholder="Admin Password"
+    autocomplete="current-password"
 >
 
 <br>
@@ -443,7 +460,9 @@ button{
 
 </div>
 
+
 <!-- ADMIN -->
+
 <div id="adminPanel" class="admin hidden">
 
 <h2>⚙️ Tournament Admin Panel</h2>
@@ -469,55 +488,57 @@ button{
 <thead>
 
 <tr>
-    <th>Participant Name</th>
 
-    <th colspan="2">🐦 Pigeon 1</th>
-    <th colspan="2">🐦 Pigeon 2</th>
-    <th colspan="2">🐦 Pigeon 3</th>
-    <th colspan="2">🐦 Pigeon 4</th>
-    <th colspan="2">🐦 Pigeon 5</th>
-    <th colspan="2">🐦 Pigeon 6</th>
-    <th colspan="2">🐦 Pigeon 7</th>
-    <th colspan="2">🐦 Pigeon 8</th>
-    <th colspan="2">🐦 Pigeon 9</th>
+<th>Participant Name</th>
 
-    <th>Total</th>
-    <th>Delete</th>
+<th colspan="2">🐦 Pigeon 1</th>
+<th colspan="2">🐦 Pigeon 2</th>
+<th colspan="2">🐦 Pigeon 3</th>
+<th colspan="2">🐦 Pigeon 4</th>
+<th colspan="2">🐦 Pigeon 5</th>
+<th colspan="2">🐦 Pigeon 6</th>
+<th colspan="2">🐦 Pigeon 7</th>
+<th colspan="2">🐦 Pigeon 8</th>
+<th colspan="2">🐦 Pigeon 9</th>
+
+<th>Total</th>
+<th>Delete</th>
+
 </tr>
 
 <tr>
 
-    <th></th>
+<th></th>
 
-    <th>Time</th>
-    <th>Duration</th>
+<th>Time</th>
+<th>Duration</th>
 
-    <th>Time</th>
-    <th>Duration</th>
+<th>Time</th>
+<th>Duration</th>
 
-    <th>Time</th>
-    <th>Duration</th>
+<th>Time</th>
+<th>Duration</th>
 
-    <th>Time</th>
-    <th>Duration</th>
+<th>Time</th>
+<th>Duration</th>
 
-    <th>Time</th>
-    <th>Duration</th>
+<th>Time</th>
+<th>Duration</th>
 
-    <th>Time</th>
-    <th>Duration</th>
+<th>Time</th>
+<th>Duration</th>
 
-    <th>Time</th>
-    <th>Duration</th>
+<th>Time</th>
+<th>Duration</th>
 
-    <th>Time</th>
-    <th>Duration</th>
+<th>Time</th>
+<th>Duration</th>
 
-    <th>Time</th>
-    <th>Duration</th>
+<th>Time</th>
+<th>Duration</th>
 
-    <th></th>
-    <th></th>
+<th></th>
+<th></th>
 
 </tr>
 
@@ -533,18 +554,17 @@ button{
 
 </div>
 
-<!-- Firebase -->
+
+<!-- FIREBASE -->
+
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 
+
 <script>
-
-/* =========================================
-   ADMIN PASSWORD
-========================================= */
-
-const ADMIN_PASSWORD = "12345";
-
 
 /* =========================================
    FIREBASE CONFIG
@@ -583,9 +603,15 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
-const db = firebase.database();
+const auth =
+    firebase.auth();
 
-const playersRef = db.ref("players");
+const db =
+    firebase.database();
+
+const playersRef =
+    db.ref("players");
+
 
 let players = [];
 
@@ -607,14 +633,18 @@ function timeToMinutes(time){
         return null;
     }
 
-    const parts = time.split(":");
+    const parts =
+        time.split(":");
 
     if(parts.length !== 2){
         return null;
     }
 
-    const hour = parseInt(parts[0]);
-    const minute = parseInt(parts[1]);
+    const hour =
+        parseInt(parts[0]);
+
+    const minute =
+        parseInt(parts[1]);
 
     if(
         isNaN(hour) ||
@@ -632,12 +662,15 @@ function timeToMinutes(time){
 
 
 /* =========================================
-   FORMAT MINUTES
+   FORMAT DURATION
 ========================================= */
 
 function formatDuration(totalMinutes){
 
-    if(totalMinutes === null || isNaN(totalMinutes)){
+    if(
+        totalMinutes === null ||
+        isNaN(totalMinutes)
+    ){
         return "00:00";
     }
 
@@ -654,13 +687,15 @@ function formatDuration(totalMinutes){
 
 
 /* =========================================
-   DURATION FROM 6 AM
+   CALCULATE DURATION
 ========================================= */
 
 function calculateDuration(end){
 
     const startMinutes =
-        timeToMinutes(FIXED_START_TIME);
+        timeToMinutes(
+            FIXED_START_TIME
+        );
 
     const endMinutes =
         timeToMinutes(end);
@@ -681,7 +716,7 @@ function calculateDuration(end){
 
 
 /* =========================================
-   TOTAL TIME
+   CALCULATE TOTAL
 ========================================= */
 
 function calculateTotalMinutes(player){
@@ -706,7 +741,9 @@ function calculateTotalMinutes(player){
 
             let duration =
                 endMinutes -
-                timeToMinutes(FIXED_START_TIME);
+                timeToMinutes(
+                    FIXED_START_TIME
+                );
 
             if(duration < 0){
                 duration += 1440;
@@ -729,45 +766,69 @@ function calculateTotal(player){
 
 
 /* =========================================
-   LOAD FROM FIREBASE
+   PREPARE PLAYER
+========================================= */
+
+function preparePlayer(player){
+
+    if(!player.pigeons){
+        player.pigeons = [];
+    }
+
+    for(let i=0; i<9; i++){
+
+        if(!player.pigeons[i]){
+
+            player.pigeons[i] = {
+                start:"",
+                end:""
+            };
+        }
+    }
+
+    return player;
+}
+
+
+/* =========================================
+   LOAD FIREBASE DATA
 ========================================= */
 
 playersRef.on("value", function(snapshot){
 
-    const data = snapshot.val();
+    const data =
+        snapshot.val();
+
+    players = [];
 
     if(data){
 
-        players =
-            Object.values(data);
+        Object.keys(data).forEach(key=>{
 
-    }else{
+            const player =
+                preparePlayer(
+                    data[key]
+                );
 
-        players = [];
+            /*
+             Firebase key محفوظ رکھنا ضروری ہے
+             تاکہ Delete صرف اسی participant
+             کو Firebase سے remove کرے۔
+            */
+
+            player.firebaseKey =
+                key;
+
+            players.push(player);
+
+        });
     }
 
-    /* Make sure every player has 9 pigeons */
-
-    players.forEach(player=>{
-
-        if(!player.pigeons){
-            player.pigeons = [];
-        }
-
-        for(let i=0; i<9; i++){
-
-            if(!player.pigeons[i]){
-                player.pigeons[i] = {
-                    start:"",
-                    end:""
-                };
-            }
-        }
-    });
 
     renderPublic();
 
     renderTop5();
+
 
     if(
         !document
@@ -777,51 +838,63 @@ playersRef.on("value", function(snapshot){
     ){
 
         renderAdmin();
+
     }
+
 
     document.getElementById(
         "firebaseMessage"
     ).innerText =
         "🟢 Live data connected";
 
+}, function(error){
+
+    console.error(error);
+
+    document.getElementById(
+        "firebaseMessage"
+    ).innerText =
+        "❌ Firebase Database permission error";
+
 });
 
 
 /* =========================================
-   FIREBASE ERROR
+   CHECK ADMIN LOGIN
 ========================================= */
 
-playersRef.on(
-    "value",
-    function(){},
-    function(error){
+function isAdminLoggedIn(){
 
-        console.error(error);
+    return auth.currentUser !== null;
 
-        document.getElementById(
-            "firebaseMessage"
-        ).innerText =
-            "❌ Firebase Database permission error";
-    }
-);
+}
 
 
 /* =========================================
    ADD PLAYER
 ========================================= */
 
-function addPlayer(){
+async function addPlayer(){
+
+    if(!isAdminLoggedIn()){
+
+        alert(
+            "پہلے Admin Login کریں"
+        );
+
+        return;
+    }
+
 
     const newPlayer = {
-
-        id:
-            Date.now().toString(),
 
         name:
             "New Participant",
 
         pigeons:[]
+
     };
+
 
     for(let i=0; i<9; i++){
 
@@ -829,18 +902,38 @@ function addPlayer(){
 
             start:"",
             end:""
+
         });
+
     }
 
-    players.push(newPlayer);
 
-    saveAll();
+    try{
 
-    renderAdmin();
+        const newRef =
+            playersRef.push();
 
-    renderPublic();
+        await newRef.set(
+            newPlayer
+        );
 
-    renderTop5();
+        document.getElementById(
+            "saveMessage"
+        ).innerText =
+            "✅ New Participant added";
+
+    }catch(error){
+
+        console.error(error);
+
+        document.getElementById(
+            "saveMessage"
+        ).innerText =
+            "❌ Add failed: " +
+            error.message;
+
+    }
+
 }
 
 
@@ -848,38 +941,85 @@ function addPlayer(){
    DELETE PLAYER
 ========================================= */
 
-function deletePlayer(index){
+async function deletePlayer(index){
 
-    if(
-        !confirm(
-            "کیا آپ اس participant کو delete کرنا چاہتے ہیں؟"
-        )
-    ){
+    if(!isAdminLoggedIn()){
+
+        alert(
+            "🔐 صرف Admin Login کے بعد Delete کر سکتے ہیں"
+        );
 
         return;
     }
+
 
     const player =
         players[index];
 
     if(!player){
+
         return;
     }
 
-    players.splice(index,1);
 
-    saveAll();
+    const playerName =
+        player.name ||
+        "Participant";
 
-    renderAdmin();
 
-    renderPublic();
+    const confirmed =
+        confirm(
+            "کیا آپ " +
+            playerName +
+            " کو permanently delete کرنا چاہتے ہیں؟"
+        );
 
-    renderTop5();
 
-    document.getElementById(
-        "saveMessage"
-    ).innerText =
-        "✅ Participant permanently deleted";
+    if(!confirmed){
+
+        return;
+    }
+
+
+    if(!player.firebaseKey){
+
+        alert(
+            "❌ Firebase record key نہیں ملی"
+        );
+
+        return;
+    }
+
+
+    try{
+
+        await playersRef
+            .child(
+                player.firebaseKey
+            )
+            .remove();
+
+
+        document.getElementById(
+            "saveMessage"
+        ).innerText =
+            "✅ " +
+            playerName +
+            " permanently deleted";
+
+
+    }catch(error){
+
+        console.error(error);
+
+        document.getElementById(
+            "saveMessage"
+        ).innerText =
+            "❌ Delete failed: " +
+            error.message;
+
+    }
+
 }
 
 
@@ -894,44 +1034,63 @@ function updateField(
     value
 ){
 
+    if(!isAdminLoggedIn()){
+
+        alert(
+            "🔐 پہلے Admin Login کریں"
+        );
+
+        return;
+    }
+
+
     if(!players[playerIndex]){
         return;
     }
 
-    if(!players[playerIndex].pigeons){
+
+    if(
+        !players[playerIndex].pigeons
+    ){
+
         players[playerIndex].pigeons = [];
+
     }
 
-    if(!players[playerIndex].pigeons[pigeonIndex]){
+
+    if(
+        !players[playerIndex]
+            .pigeons[pigeonIndex]
+    ){
 
         players[playerIndex]
             .pigeons[pigeonIndex] = {
 
                 start:"",
                 end:""
+
             };
+
     }
 
-    /*
-       New system uses END time.
-       START is kept empty so old Firebase
-       structure remains compatible.
-    */
 
     if(type === "end"){
 
         players[playerIndex]
             .pigeons[pigeonIndex]
             .end = value;
+
     }
 
-    updateAdminTotal(playerIndex);
+
+    updateAdminTotal(
+        playerIndex
+    );
 
     renderPublic();
 
     renderTop5();
 
-    saveAll(false);
 }
 
 
@@ -939,11 +1098,21 @@ function updateField(
    UPDATE NAME
 ========================================= */
 
-function updateName(index,value){
+function updateName(
+    index,
+    value
+){
+
+    if(!isAdminLoggedIn()){
+
+        return;
+    }
+
 
     if(!players[index]){
         return;
     }
+
 
     players[index].name =
         value;
@@ -952,7 +1121,6 @@ function updateName(index,value){
 
     renderTop5();
 
-    saveAll(false);
 }
 
 
@@ -962,50 +1130,150 @@ function updateName(index,value){
 
 function updateAdminTotal(index){
 
+    if(!players[index]){
+        return;
+    }
+
+
     const total =
         calculateTotal(
             players[index]
         );
+
 
     const element =
         document.getElementById(
             "admin-total-" + index
         );
 
+
     if(element){
 
         element.innerText =
             total;
+
     }
+
 
     for(let i=0; i<9; i++){
 
         const pigeon =
-            players[index].pigeons[i]
+            players[index]
+                .pigeons[i]
             || {};
+
 
         const duration =
             calculateDuration(
                 pigeon.end || ""
             );
 
+
         const el =
             document.getElementById(
                 `duration-${index}-${i}`
             );
 
+
         if(el){
 
             el.innerText =
                 duration;
+
         }
+
     }
+
 }
 
 
 /* =========================================
-   RENDER PUBLIC TABLE
-   ONLY PUBLIC DISPLAY CHANGED
+   SAVE ALL
+========================================= */
+
+async function saveAll(){
+
+    if(!isAdminLoggedIn()){
+
+        alert(
+            "🔐 پہلے Admin Login کریں"
+        );
+
+        return;
+    }
+
+
+    const message =
+        document.getElementById(
+            "saveMessage"
+        );
+
+
+    message.innerText =
+        "💾 Saving...";
+
+
+    try{
+
+        /*
+        ہر participant کو اس کی اپنی
+        Firebase key پر save کیا جاتا ہے۔
+        */
+
+        const updates = {};
+
+
+        players.forEach(player=>{
+
+            if(!player.firebaseKey){
+
+                return;
+            }
+
+
+            const cleanPlayer = {
+
+                name:
+                    player.name || "",
+
+                pigeons:
+                    player.pigeons || []
+
+            };
+
+
+            updates[
+                player.firebaseKey
+            ] =
+                cleanPlayer;
+
+        });
+
+
+        await playersRef.update(
+            updates
+        );
+
+
+        message.innerText =
+            "✅ All changes saved successfully";
+
+
+    }catch(error){
+
+        console.error(error);
+
+        message.innerText =
+            "❌ Save failed: " +
+            error.message;
+
+    }
+
+}
+
+
+/* =========================================
+   RENDER PUBLIC
 ========================================= */
 
 function renderPublic(){
@@ -1015,44 +1283,54 @@ function renderPublic(){
             "publicTable"
         );
 
+
     table.innerHTML = "";
+
 
     players.forEach(player=>{
 
         const row =
             document.createElement("tr");
 
-        /* PARTICIPANT */
 
         const name =
             document.createElement("td");
 
+
         name.className =
             "player";
+
 
         name.innerText =
             player.name || "";
 
+
         row.appendChild(name);
 
-
-        /* 9 PIGEONS */
 
         for(let i=0; i<9; i++){
 
             const pigeon =
-                player.pigeons[i] || {};
+                player.pigeons[i]
+                || {};
+
 
             const cell =
                 document.createElement("td");
 
+
             const actualTime =
-                pigeon.end || "--:--";
+                pigeon.end ||
+                "--:--";
+
 
             const duration =
                 pigeon.end
-                ? calculateDuration(pigeon.end)
+                ? calculateDuration(
+                    pigeon.end
+                  )
                 : "00:00";
+
 
             cell.innerHTML = `
 
@@ -1071,16 +1349,18 @@ function renderPublic(){
                     </div>
 
                 </div>
+
             `;
 
+
             row.appendChild(cell);
+
         }
 
 
-        /* TOTAL */
-
         const total =
             document.createElement("td");
+
 
         total.innerHTML = `
 
@@ -1095,13 +1375,17 @@ function renderPublic(){
                 </small>
 
             </div>
+
         `;
 
+
         row.appendChild(total);
+
 
         table.appendChild(row);
 
     });
+
 }
 
 
@@ -1116,11 +1400,14 @@ function renderTop5(){
             "top5Table"
         );
 
+
     if(!table){
         return;
     }
 
+
     table.innerHTML = "";
+
 
     const rankedPlayers =
         [...players]
@@ -1130,7 +1417,10 @@ function renderTop5(){
             player:player,
 
             totalMinutes:
-                calculateTotalMinutes(player)
+                calculateTotalMinutes(
+                    player
+                )
+
         }))
 
         .filter(item =>
@@ -1147,7 +1437,9 @@ function renderTop5(){
         .slice(0,5);
 
 
-    if(rankedPlayers.length === 0){
+    if(
+        rankedPlayers.length === 0
+    ){
 
         table.innerHTML = `
 
@@ -1158,63 +1450,91 @@ function renderTop5(){
                 </td>
 
             </tr>
+
         `;
 
         return;
     }
 
 
+    const medals =
+        [
+            "🥇",
+            "🥈",
+            "🥉",
+            "4️⃣",
+            "5️⃣"
+        ];
+
+
     rankedPlayers.forEach(
         (item,index)=>{
 
             const row =
-                document.createElement("tr");
+                document.createElement(
+                    "tr"
+                );
+
 
             const rank =
-                document.createElement("td");
+                document.createElement(
+                    "td"
+                );
+
 
             rank.className =
                 "top5-rank";
 
-            const medals =
-                ["🥇","🥈","🥉","4️⃣","5️⃣"];
 
             rank.innerText =
                 medals[index] ||
                 (index+1);
 
+
             row.appendChild(rank);
 
 
             const name =
-                document.createElement("td");
+                document.createElement(
+                    "td"
+                );
+
 
             name.className =
                 "top5-name";
 
+
             name.innerText =
                 item.player.name;
+
 
             row.appendChild(name);
 
 
             const time =
-                document.createElement("td");
+                document.createElement(
+                    "td"
+                );
+
 
             time.className =
                 "top5-time";
+
 
             time.innerText =
                 formatDuration(
                     item.totalMinutes
                 );
 
+
             row.appendChild(time);
 
 
             table.appendChild(row);
+
         }
     );
+
 }
 
 
@@ -1229,6 +1549,7 @@ function renderAdmin(){
             "adminTable"
         );
 
+
     table.innerHTML = "";
 
 
@@ -1236,22 +1557,32 @@ function renderAdmin(){
         (player,index)=>{
 
             const row =
-                document.createElement("tr");
+                document.createElement(
+                    "tr"
+                );
 
 
             /* NAME */
 
             const nameCell =
-                document.createElement("td");
+                document.createElement(
+                    "td"
+                );
+
 
             const nameInput =
-                document.createElement("input");
+                document.createElement(
+                    "input"
+                );
+
 
             nameInput.className =
                 "name-input";
 
+
             nameInput.value =
                 player.name || "";
+
 
             nameInput.addEventListener(
                 "change",
@@ -1265,9 +1596,11 @@ function renderAdmin(){
                 }
             );
 
+
             nameCell.appendChild(
                 nameInput
             );
+
 
             row.appendChild(
                 nameCell
@@ -1286,19 +1619,27 @@ function renderAdmin(){
                     };
 
 
-                /* TIME / END */
+                /* TIME */
 
                 const timeCell =
-                    document.createElement("td");
+                    document.createElement(
+                        "td"
+                    );
+
 
                 const timeInput =
-                    document.createElement("input");
+                    document.createElement(
+                        "input"
+                    );
+
 
                 timeInput.type =
                     "time";
 
+
                 timeInput.value =
                     pigeon.end || "";
+
 
                 timeInput.addEventListener(
                     "change",
@@ -1314,9 +1655,11 @@ function renderAdmin(){
                     }
                 );
 
+
                 timeCell.appendChild(
                     timeInput
                 );
+
 
                 row.appendChild(
                     timeCell
@@ -1326,12 +1669,16 @@ function renderAdmin(){
                 /* DURATION */
 
                 const durationCell =
-                    document.createElement("td");
+                    document.createElement(
+                        "td"
+                    );
+
 
                 const duration =
                     calculateDuration(
                         pigeon.end || ""
                     );
+
 
                 durationCell.innerHTML = `
 
@@ -1341,18 +1688,24 @@ function renderAdmin(){
                     >
                         ${duration}
                     </span>
+
                 `;
+
 
                 row.appendChild(
                     durationCell
                 );
+
             }
 
 
             /* TOTAL */
 
             const totalCell =
-                document.createElement("td");
+                document.createElement(
+                    "td"
+                );
+
 
             totalCell.innerHTML = `
 
@@ -1362,7 +1715,9 @@ function renderAdmin(){
                 >
                     ${calculateTotal(player)}
                 </span>
+
             `;
+
 
             row.appendChild(
                 totalCell
@@ -1372,16 +1727,24 @@ function renderAdmin(){
             /* DELETE */
 
             const deleteCell =
-                document.createElement("td");
+                document.createElement(
+                    "td"
+                );
+
 
             const deleteButton =
-                document.createElement("button");
+                document.createElement(
+                    "button"
+                );
+
 
             deleteButton.className =
                 "danger";
 
+
             deleteButton.innerText =
                 "Delete";
+
 
             deleteButton.onclick =
                 function(){
@@ -1390,9 +1753,11 @@ function renderAdmin(){
 
                 };
 
+
             deleteCell.appendChild(
                 deleteButton
             );
+
 
             row.appendChild(
                 deleteCell
@@ -1402,85 +1767,177 @@ function renderAdmin(){
             table.appendChild(
                 row
             );
+
         }
     );
+
 }
 
 
 /* =========================================
-   LOGIN
+   FIREBASE AUTH LOGIN
 ========================================= */
 
-function login(){
+async function login(){
+
+    const email =
+        document.getElementById(
+            "adminEmail"
+        ).value.trim();
+
 
     const password =
-        document.getElementById("password").value;
+        document.getElementById(
+            "adminPassword"
+        ).value;
+
 
     const message =
-        document.getElementById("loginMessage");
+        document.getElementById(
+            "loginMessage"
+        );
 
-    if(password === ADMIN_PASSWORD){
+
+    if(!email || !password){
+
+        message.innerText =
+            "❌ Email اور Password دونوں لکھیں";
+
+        message.style.color =
+            "#ff7777";
+
+        return;
+    }
+
+
+    message.innerText =
+        "🔄 Login ہو رہا ہے...";
+
+
+    try{
+
+        await auth.signInWithEmailAndPassword(
+            email,
+            password
+        );
+
 
         document
             .getElementById("loginBox")
             .classList.add("hidden");
 
+
         document
             .getElementById("adminPanel")
             .classList.remove("hidden");
 
+
         message.innerText = "";
+
 
         renderAdmin();
 
-    }else{
+
+    }catch(error){
+
+        console.error(error);
 
         message.innerText =
-            "❌ غلط Admin Password";
+            "❌ Email یا Password غلط ہے";
 
         message.style.color =
             "#ff7777";
+
     }
+
 }
+
+
+/* =========================================
+   AUTH STATE
+========================================= */
+
+auth.onAuthStateChanged(
+    function(user){
+
+        if(user){
+
+            document
+                .getElementById("loginBox")
+                .classList.add("hidden");
+
+
+            document
+                .getElementById("adminPanel")
+                .classList.remove("hidden");
+
+
+            renderAdmin();
+
+        }else{
+
+            document
+                .getElementById("loginBox")
+                .classList.remove("hidden");
+
+
+            document
+                .getElementById("adminPanel")
+                .classList.add("hidden");
+
+        }
+
+    }
+);
 
 
 /* =========================================
    LOGOUT
 ========================================= */
 
-function logout(){
+async function logout(){
 
-    document
-        .getElementById("adminPanel")
-        .classList.add("hidden");
+    try{
 
-    document
-        .getElementById("loginBox")
-        .classList.remove("hidden");
+        await auth.signOut();
 
-    document
-        .getElementById("password")
-        .value = "";
+        document
+            .getElementById("adminPassword")
+            .value = "";
 
-    document
-        .getElementById("loginMessage")
-        .innerText = "";
+
+        document
+            .getElementById("loginMessage")
+            .innerText = "";
+
+
+    }catch(error){
+
+        console.error(error);
+
+    }
+
 }
 
 
 /* =========================================
-   ENTER KEY LOGIN
+   ENTER KEY
 ========================================= */
 
 document
-    .getElementById("password")
-    .addEventListener("keydown", function(event){
+    .getElementById("adminPassword")
+    .addEventListener(
+        "keydown",
+        function(event){
 
-        if(event.key === "Enter"){
-            login();
+            if(event.key === "Enter"){
+
+                login();
+
+            }
+
         }
-
-    });
+    );
 
 </script>
 
