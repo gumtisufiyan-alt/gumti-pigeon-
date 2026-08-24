@@ -1403,3 +1403,86 @@ function renderAdmin(){
                 row
             );
        
+        );
+}
+
+
+/* =========================================
+   LOGIN
+========================================= */
+
+function login(){
+
+    const password =
+        document.getElementById("password").value;
+
+    const message =
+        document.getElementById("loginMessage");
+
+    if(password === ADMIN_PASSWORD){
+
+        document
+            .getElementById("loginBox")
+            .classList.add("hidden");
+
+        document
+            .getElementById("adminPanel")
+            .classList.remove("hidden");
+
+        message.innerText = "";
+
+        renderAdmin();
+
+    }else{
+
+        message.innerText =
+            "❌ غلط Admin Password";
+
+        message.style.color =
+            "#ff7777";
+    }
+}
+
+
+/* =========================================
+   LOGOUT
+========================================= */
+
+function logout(){
+
+    document
+        .getElementById("adminPanel")
+        .classList.add("hidden");
+
+    document
+        .getElementById("loginBox")
+        .classList.remove("hidden");
+
+    document
+        .getElementById("password")
+        .value = "";
+
+    document
+        .getElementById("loginMessage")
+        .innerText = "";
+}
+
+
+/* =========================================
+   ENTER KEY LOGIN
+========================================= */
+
+document
+    .getElementById("password")
+    .addEventListener("keydown", function(event){
+
+        if(event.key === "Enter"){
+            login();
+        }
+
+    });
+
+</script>
+
+</body>
+</html>
